@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#C8FAFF"
+    android:padding="10dp"
+    tools:layout_editor_absoluteY="81dp">
+
+    <TextView
+        android:id="@+id/_course_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/course_name"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/_extended_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="@string/extended_name"
+        android:textColor="#000000"
+        app:layout_constraintStart_toStartOf="@+id/_course_name_tv"
+        app:layout_constraintTop_toBottomOf="@+id/_course_name_tv" />
+
+    <TextView
+        android:id="@+id/_course_number_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/course_number"
+        android:textColor="#000000"
+        app:layout_constraintStart_toStartOf="@+id/_extended_name_tv"
+        app:layout_constraintTop_toBottomOf="@+id/_extended_name_tv" />
+
+    <TextView
+        android:id="@+id/_held_day_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="@string/held_day"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/_course_name_tv"
+        app:layout_constraintStart_toEndOf="@+id/_course_name_tv" />
+
+    <TextView
+        android:id="@+id/_no_student_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_students"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/_no_student_label"
+        app:layout_constraintStart_toEndOf="@+id/_no_student_label" />
+
+    <Button
+        android:id="@+id/_take_attendance_btn"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00BCD4"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:text="@string/take_attendance"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/_no_student_tv"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/_no_student_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_students_label"
+        android:textColor="#000000"
+        app:layout_constraintStart_toStartOf="@+id/_course_number_tv"
+        app:layout_constraintTop_toBottomOf="@+id/_course_number_tv" />
+</androidx.constraintlayout.widget.ConstraintLayout>

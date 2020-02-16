@@ -1,38 +1,10 @@
 <resources>
     <string name="app_name">Roll Call</string>
-    <string-array name="course_name">
-        <item>Web Development with Advanced JavaScript</item>
-        <item>Android App Fundamentals</item>
-        <item>Program Translation Techniques</item>
-        <item>Artificial Intelligence</item>
-        <item>Database Management Systems</item>
-    </string-array>
-    <string-array name="extended_name">
-        <item>CMP SCI 4011</item>
-        <item>CMP SCI 4020</item>
-        <item>CMP SCI 4280</item>
-        <item>CMP SCI 4300</item>
-        <item>CMP SCI 4610</item>
-    </string-array>
-    <string-array name="course_number">
-        <item>4011</item>
-        <item>4020</item>
-        <item>4280</item>
-        <item>4300</item>
-        <item>4610</item>
-    </string-array>
-    <string-array name="no_students">
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-    </string-array>
-    <string-array name="held_day">
-        <item>T/TH</item>
-        <item>M/W</item>
-        <item>M/W</item>
-        <item>T/TH</item>
-        <item>M/W</item>
-    </string-array>
+    <string name="course_name">Course Name</string>
+    <string name="extended_name">Extended Name</string>
+    <string name="course_number">Course Number</string>
+    <string name="no_students_label">No. Students:&#160;</string>
+    <string name="no_students">99</string>
+    <string name="held_day">Held Day</string>
+    <string name="take_attendance">Take Attendance</string>
 </resources>
