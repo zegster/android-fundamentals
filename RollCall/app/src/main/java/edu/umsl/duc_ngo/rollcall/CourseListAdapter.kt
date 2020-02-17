@@ -7,6 +7,11 @@ import android.widget.TextView
 import android.view.LayoutInflater
 import kotlinx.android.synthetic.main.course_row_list.view.*
 
+/* ListView is deprecated
+Invoking it in Main:
+    val listView = findViewById<ListView>(R.id._course_list)
+    listView.adapter = CourseListAdapter(model)
+ */
 class CourseListAdapter(model: CourseModel): BaseAdapter() {
     private val mModel: CourseModel = model
 
@@ -34,7 +39,7 @@ class CourseListAdapter(model: CourseModel): BaseAdapter() {
         //Check if convertView is null, if so then inflate a new row
         if(convertView == null) {
             //LayoutInflater inflate XML files and it gives us the entire view so that we can use it as the return value
-            val layoutInflater = LayoutInflater.from(parent!!.context)
+            val layoutInflater = LayoutInflater.from(parent?.context)
             courseRowList = layoutInflater.inflate(R.layout.course_row_list, parent, false)
 
             //Note: findViewById is very expensive

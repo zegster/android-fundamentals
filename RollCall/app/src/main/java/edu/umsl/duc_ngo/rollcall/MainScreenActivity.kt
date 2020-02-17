@@ -12,8 +12,6 @@ class MainScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_screen)
 
-        Log.d("Main", model.getCourse(0).course_name)
-
         val listView = findViewById<ListView>(R.id._course_list)
         listView.adapter = CourseListAdapter(model)
     }
