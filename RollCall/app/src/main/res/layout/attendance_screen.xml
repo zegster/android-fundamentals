@@ -7,7 +7,7 @@
     tools:context=".MainScreenActivity">
 
     <LinearLayout
-        android:id="@+id/_main_screen_fgc"
+        android:id="@+id/_attendance_screen_fgc"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="1dp"

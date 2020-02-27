@@ -16,7 +16,7 @@ class MainScreenActivity : AppCompatActivity() {
         val mainViewFragment = MainScreenFragment(courseModel)
         val transaction = this.supportFragmentManager.beginTransaction()
 
-        transaction.add(R.id._fragment_container, mainViewFragment)
+        transaction.add(R.id._main_screen_fgc, mainViewFragment)
         transaction.commit()
     }
 }

@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.recyclerview_fragment.*
 
-class MainScreenFragment(private var model: CourseModel): Fragment() {
+class AttendanceScreenFragment(private var model: StudentModel): Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -22,8 +22,9 @@ class MainScreenFragment(private var model: CourseModel): Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //Adapter is a data source or a UI table view delegate to a list (which it helps rendering out the items inside of a list)
+        //Add intent here
         _recyclerview_fg.layoutManager = LinearLayoutManager(activity)
-        _recyclerview_fg.adapter = CourseListAdapter(model)
+        _recyclerview_fg.adapter = StudentListAdapter(model)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

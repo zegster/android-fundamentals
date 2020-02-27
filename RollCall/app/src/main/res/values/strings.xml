@@ -15,4 +15,6 @@
     <string name="unknown_rate_label">Unknown:&#160;</string>
     <string name="unknown_rate">100</string>
     <string name="take_attendance">Take Attendance</string>
+
+    <string name="student_name">Student Name</string>
 </resources>
