@@ -1,7 +1,7 @@
 package edu.umsl.duc_ngo.rollcall
 
 class CourseModel {
-    private var courses: ArrayList<CourseData> = arrayListOf(
+    private var courses = listOf(
         CourseData("Web Development with Advanced JavaScript","CMP SCI 4011", 4011, 21, "M/W", 0.0F, 0.0F, 0.0F),
         CourseData("Enterprise Web Development","CMP SCI 4012", 4012, 22, "M/W", 0.0F, 0.0F, 0.0F),
         CourseData("Android App Fundamentals","CMP SCI 4020", 4020, 23, "T/TH", 0.0F, 0.0F, 0.0F),
