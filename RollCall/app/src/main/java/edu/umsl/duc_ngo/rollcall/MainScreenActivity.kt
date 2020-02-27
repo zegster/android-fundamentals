@@ -11,8 +11,6 @@ class MainScreenActivity : AppCompatActivity() {
         setContentView(R.layout.main_screen)
 
         //If it null, create a new instance. Model will never be null because we did lateinit
-        //Note: this is an Elvis Operator
-        //courseModel = ModelHolder.instance.get(CourseModel::class) ?: CourseModel()
         courseModel = CourseModel()
 
         val mainViewFragment = MainScreenFragment(courseModel)
@@ -20,10 +18,5 @@ class MainScreenActivity : AppCompatActivity() {
 
         transaction.add(R.id._fragment_container, mainViewFragment)
         transaction.commit()
-
-        //LinearLayoutManager : implementation that provides similar functionality to ListView [DEPRECATED]
-
-//        _recycler_view_main.layoutManager = LinearLayoutManager(this)
-//        _recycler_view_main.adapter = CourseAdapter(model)
     }
 }

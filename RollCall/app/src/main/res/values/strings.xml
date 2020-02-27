@@ -1,10 +1,18 @@
 <resources>
     <string name="app_name">Roll Call</string>
+    <string name="course_detail">Course Detail</string>
+
     <string name="course_name">Course Name</string>
+    <string name="held_day">Held Day</string>
     <string name="extended_name">Extended Name</string>
     <string name="course_number">Course Number</string>
     <string name="no_students_label">No. Students:&#160;</string>
-    <string name="no_students">99</string>
-    <string name="held_day">Held Day</string>
+    <string name="no_students">100</string>
+    <string name="present_rate_label">Present:&#160;</string>
+    <string name="present_rate">100</string>
+    <string name="late_rate_label">Late:&#160;</string>
+    <string name="late_rate">100</string>
+    <string name="unknown_rate_label">Unknown:&#160;</string>
+    <string name="unknown_rate">100</string>
     <string name="take_attendance">Take Attendance</string>
 </resources>
