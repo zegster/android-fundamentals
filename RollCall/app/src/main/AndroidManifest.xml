@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".MainScreenActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,6 +21,7 @@
         </activity>
 
         <activity android:name=".AttendanceScreenActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/course_detail"
             android:launchMode="singleTop">
             <meta-data android:name="android.support.PARENT_ACTIVITY"

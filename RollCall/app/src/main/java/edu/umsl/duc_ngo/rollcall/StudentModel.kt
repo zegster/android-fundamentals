@@ -1,34 +1,30 @@
 package edu.umsl.duc_ngo.rollcall
 
 class StudentModel {
-    private var students = listOf(
-        listOf(
-            StudentData("Duc", present = true, late = false, unknown = false),
-            StudentData("John", present = true, late = false, unknown = false),
-            StudentData("Jared", present = true, late = false, unknown = false),
-            StudentData("Danny", present = true, late = false, unknown = false),
-            StudentData("Jackson", present = true, late = false, unknown = false)),
+    private var students = arrayOf(
+        arrayListOf(
+            StudentData("Duc"),
+            StudentData("John"),
+            StudentData("Jared"),
+            StudentData("Danny"),
+            StudentData("Jackson")),
 
-        listOf(
-            StudentData("Allison", present = true, late = false, unknown = false),
-            StudentData("David", present = true, late = false, unknown = false),
-            StudentData("Daniel", present = true, late = false, unknown = false),
-            StudentData("James", present = true, late = false, unknown = false),
-            StudentData("Brandon", present = true, late = false, unknown = false)),
+        arrayListOf(
+            StudentData("Allison"),
+            StudentData("David"),
+            StudentData("Daniel"),
+            StudentData("James"),
+            StudentData("Brandon")),
 
-        listOf(
-            StudentData("Austin", present = true, late = false, unknown = false),
-            StudentData("Ben", present = true, late = false, unknown = false),
-            StudentData("Jesse", present = true, late = false, unknown = false),
-            StudentData("Luke", present = true, late = false, unknown = false),
-            StudentData("Matt", present = true, late = false, unknown = false))
+        arrayListOf(
+            StudentData("Austin"),
+            StudentData("Ben"),
+            StudentData("Jesse"),
+            StudentData("Luke"),
+            StudentData("Matt"))
     )
 
-    fun getStudentSize(id: Int): Int {
-        return students[id].size
-    }
-
-    fun getStudent(id: Int, index: Int): StudentData {
-        return students[id][index]
+    fun getStudentRoster(id: Int): ArrayList<StudentData> {
+        return students[id]
     }
 }

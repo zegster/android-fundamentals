@@ -2,9 +2,9 @@ package edu.umsl.duc_ngo.rollcall
 
 class CourseModel {
     private var courses = listOf(
-        CourseData(1, "Web Development with Advanced JavaScript","CMP SCI 4011", 4011, 21, "M/W", 0.0F, 0.0F, 0.0F),
-        CourseData(2, "Enterprise Web Development","CMP SCI 4012", 4012, 22, "M/W", 0.0F, 0.0F, 0.0F),
-        CourseData(3, "Android App Fundamentals","CMP SCI 4020", 4020, 23, "T/TH", 0.0F, 0.0F, 0.0F)
+        CourseData(0, "Web Development with Advanced JavaScript", "M/W", "CMP SCI 4011", 4011, 5),
+        CourseData(1, "Enterprise Web Development", "M/W", "CMP SCI 4012", 4012, 5),
+        CourseData(2, "Android App Fundamentals", "T/TH", "CMP SCI 4020", 4020, 5)
         )
 
     fun getCourseSize(): Int {
@@ -14,11 +14,17 @@ class CourseModel {
     fun getCourse(index: Int): CourseData {
         return courses[index]
     }
+
+    fun setCourse(index: Int, p: Int, l: Int, a: Int, u: Int) {
+        courses[index].no_present = p
+        courses[index].no_late = l
+        courses[index].no_absence = a
+        courses[index].no_unknown = u
+    }
 }
 
 /*
-CourseData(4, "Program Translation Techniques","CMP SCI 4280", 4020, 24, "T/TH", 0.0F, 0.0F, 0.0F),
-CourseData(5, "Artificial Intelligence","CMP SCI 4300", 4020, 25, "M/W", 0.0F, 0.0F, 0.0F),
-CourseData(6, "Database Management Systems","CMP SCI 4610", 4020, 26, "T/TH", 0.0F, 0.0F, 0.0F)
-
+CourseData(3, "Program Translation Techniques","CMP SCI 4280", 4020, 5, "T/TH"),
+CourseData(4, "Artificial Intelligence","CMP SCI 4300", 4020, 5, "M/W"),
+CourseData(5, "Database Management Systems","CMP SCI 4610", 4020, 5, "T/TH")
  */

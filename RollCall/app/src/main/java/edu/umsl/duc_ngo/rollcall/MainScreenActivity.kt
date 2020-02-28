@@ -4,16 +4,27 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
 class MainScreenActivity : AppCompatActivity() {
-    lateinit var courseModel: CourseModel
+    private lateinit var courseModel: CourseModel
+    lateinit var studentModel: StudentModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_screen)
 
-        //If it null, create a new instance. Model will never be null because we did lateinit
-        courseModel = CourseModel()
+        savedInstanceState?.let{
+            courseModel = CourseModel()
+            studentModel = StudentModel()
+        }
 
-        val mainViewFragment = MainScreenFragment(courseModel)
+        if(!::courseModel.isInitialized) {
+            courseModel = CourseModel()
+        }
+
+        if(!::studentModel.isInitialized) {
+            studentModel = StudentModel()
+        }
+
+        val mainViewFragment = MainScreenFragment(courseModel, studentModel)
         val transaction = this.supportFragmentManager.beginTransaction()
 
         transaction.add(R.id._main_screen_fgc, mainViewFragment)
