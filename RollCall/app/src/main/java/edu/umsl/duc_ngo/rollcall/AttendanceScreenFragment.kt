@@ -11,11 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.recyclerview_fragment.*
 import kotlinx.android.synthetic.main.student_row.view.*
 
-class AttendanceScreenFragment(private var list: ArrayList<StudentData>): Fragment() {
-    companion object {
-        private const val STUDENT_ATTENDANCE = "edu.umsl.duc_ngo.studentAttendance"
-    }
-
+class AttendanceScreenFragment(private var listId: Int, private var list: ArrayList<StudentData>): Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,23 +25,21 @@ class AttendanceScreenFragment(private var list: ArrayList<StudentData>): Fragme
 
         //Adapter is a data source or a UI table view delegate to a list (which it helps rendering out the items inside of a list)
         _recyclerview_fg.layoutManager = LinearLayoutManager(activity)
-        _recyclerview_fg.adapter = StudentListAdapter(list)
+        _recyclerview_fg.adapter = StudentListAdapter()
     }
 
     /* More Info: https://developer.android.com/reference/kotlin/androidx/recyclerview/widget/RecyclerView.Adapter */
-    inner class StudentListAdapter(list: ArrayList<StudentData>): RecyclerView.Adapter<StudentViewHolder>() {
-        private val studentList: ArrayList<StudentData> = list
-
+    inner class StudentListAdapter: RecyclerView.Adapter<StudentViewHolder>() {
         /* Return number of items to render */
         override fun getItemCount(): Int {
-            return studentList.size
+            return list.size
         }
 
         /* Called by RecyclerView to display the data at the specified position.
         NOTE: unlike android.widget.ListView, RecyclerView will not call this method again if the position of the
         item changes in the data set unless the item itself is invalidated or the new position cannot be determined. */
         override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
-            holder.studentBind(studentList, position)
+            holder.studentBind(position)
         }
 
         /* Called when RecyclerView needs a new ViewHolder of the given type to represent an item. */
@@ -58,7 +52,7 @@ class AttendanceScreenFragment(private var list: ArrayList<StudentData>): Fragme
     }
 
     inner class StudentViewHolder(private val customView: View): RecyclerView.ViewHolder(customView) {
-        fun studentBind(list: ArrayList<StudentData>, position: Int) {
+        fun studentBind(position: Int) {
             //Pre-populate value
             customView._student_name_tv.text = list[position].student_name
             customView._student_attendance_rbtng.clearCheck()
@@ -93,6 +87,9 @@ class AttendanceScreenFragment(private var list: ArrayList<StudentData>): Fragme
                 }
             }
 
+            //Make sure the return intent is not null
+            AttendanceScreenActivity.newIntentResult(activity, listId, list)
+
             //Present Radio Button
             customView._present_rbtn.setOnClickListener{
                 customView._student_attendance_rbtng.clearCheck()
@@ -103,8 +100,7 @@ class AttendanceScreenFragment(private var list: ArrayList<StudentData>): Fragme
                 list[position].unknown = false
 
                 //Return updated list
-                val returnIntent = AttendanceScreenActivity.newIntent(activity, position, list)
-                activity?.setResult(Activity.RESULT_OK, returnIntent)
+                AttendanceScreenActivity.newIntentResult(activity, listId, list)
             }
 
             //Late Radio Button
@@ -117,8 +113,7 @@ class AttendanceScreenFragment(private var list: ArrayList<StudentData>): Fragme
                 list[position].unknown = false
 
                 //Return updated list
-                val returnIntent = AttendanceScreenActivity.newIntent(activity, position, list)
-                activity?.setResult(Activity.RESULT_OK, returnIntent)
+                AttendanceScreenActivity.newIntentResult(activity, listId, list)
             }
 
             //Absence Radio Button
@@ -131,8 +126,7 @@ class AttendanceScreenFragment(private var list: ArrayList<StudentData>): Fragme
                 list[position].unknown = false
 
                 //Return updated list
-                val returnIntent = AttendanceScreenActivity.newIntent(activity, position, list)
-                activity?.setResult(Activity.RESULT_OK, returnIntent)
+                AttendanceScreenActivity.newIntentResult(activity, listId, list)
             }
 
             //Unknown Radio Button
@@ -145,8 +139,7 @@ class AttendanceScreenFragment(private var list: ArrayList<StudentData>): Fragme
                 list[position].unknown = true
 
                 //Return updated list
-                val returnIntent = AttendanceScreenActivity.newIntent(activity, position, list)
-                activity?.setResult(Activity.RESULT_OK, returnIntent)
+                AttendanceScreenActivity.newIntentResult(activity, listId, list)
             }
         }
     }

@@ -1,5 +1,8 @@
 package edu.umsl.duc_ngo.rollcall
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 class CourseModel {
     private var courses = listOf(
         CourseData(0, "Web Development with Advanced JavaScript", "M/W", "CMP SCI 4011", 4011, 5),
@@ -23,8 +26,16 @@ class CourseModel {
     }
 }
 
-/*
-CourseData(3, "Program Translation Techniques","CMP SCI 4280", 4020, 5, "T/TH"),
-CourseData(4, "Artificial Intelligence","CMP SCI 4300", 4020, 5, "M/W"),
-CourseData(5, "Database Management Systems","CMP SCI 4610", 4020, 5, "T/TH")
- */
+@Parcelize
+data class CourseData (
+    var cid: Int,
+    var course_name: String,
+    var held_day: String,
+    var extended_name: String,
+    var course_number: Int,
+    var no_students: Int,
+    var no_present: Int = 0,
+    var no_late: Int = 0,
+    var no_absence: Int = 0,
+    var no_unknown: Int = 5
+): Parcelable

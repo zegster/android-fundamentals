@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainScreenActivity : AppCompatActivity() {
     private lateinit var courseModel: CourseModel
-    lateinit var studentModel: StudentModel
+    private lateinit var studentModel: StudentModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,9 +25,12 @@ class MainScreenActivity : AppCompatActivity() {
         }
 
         val mainViewFragment = MainScreenFragment(courseModel, studentModel)
-        val transaction = this.supportFragmentManager.beginTransaction()
-
-        transaction.add(R.id._main_screen_fgc, mainViewFragment)
-        transaction.commit()
+        if(savedInstanceState == null)
+        {
+            //Get the layout ID you want to inject, and pass in the fragment you want to inject into
+            val transaction = this.supportFragmentManager.beginTransaction()
+            transaction.add(R.id._main_screen_fgc, mainViewFragment)
+            transaction.commit()
+        }
     }
 }

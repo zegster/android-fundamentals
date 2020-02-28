@@ -7,9 +7,10 @@
     <string name="extended_name">Extended Name</string>
     <string name="course_number">Course Number</string>
     <string name="no_students">No. Students</string>
-    <string name="present_rate">Present Rate</string>
-    <string name="late_rate">Late Rate</string>
-    <string name="unknown_rate">Unknown Rate</string>
+    <string name="no_present">No. Present</string>
+    <string name="no_late">No. Late</string>
+    <string name="no_absence">No. Absence</string>
+    <string name="no_unknown">No. Unknown</string>
     
     <string name="student_name">Student Name</string>
     <string name="present_radio">Present</string>

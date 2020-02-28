@@ -57,30 +57,39 @@
         app:layout_constraintTop_toBottomOf="@+id/_course_name_tv" />
 
     <TextView
-        android:id="@+id/_present_rate_tv"
+        android:id="@+id/_no_present_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/present_rate"
+        android:text="@string/no_present"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="@+id/_no_student_tv"
         app:layout_constraintTop_toBottomOf="@+id/_no_student_tv" />
 
     <TextView
-        android:id="@+id/_late_rate_tv"
+        android:id="@+id/_no_late_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/late_rate"
+        android:text="@string/no_late"
         android:textColor="#000000"
-        app:layout_constraintStart_toStartOf="@+id/_present_rate_tv"
-        app:layout_constraintTop_toBottomOf="@+id/_present_rate_tv" />
+        app:layout_constraintStart_toStartOf="@+id/_no_present_tv"
+        app:layout_constraintTop_toBottomOf="@+id/_no_present_tv" />
 
     <TextView
-        android:id="@+id/_unknown_rate_tv"
+        android:id="@+id/_no_absence_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/unknown_rate"
+        android:text="@string/no_absence"
         android:textColor="#000000"
-        app:layout_constraintStart_toStartOf="@+id/_late_rate_tv"
-        app:layout_constraintTop_toBottomOf="@+id/_late_rate_tv" />
+        app:layout_constraintStart_toStartOf="@+id/_no_late_tv"
+        app:layout_constraintTop_toBottomOf="@+id/_no_late_tv" />
+
+    <TextView
+        android:id="@+id/_no_unknown_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_unknown"
+        android:textColor="#000000"
+        app:layout_constraintStart_toStartOf="@+id/_no_absence_tv"
+        app:layout_constraintTop_toBottomOf="@+id/_no_absence_tv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

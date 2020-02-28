@@ -22,7 +22,6 @@
 
         <activity android:name=".AttendanceScreenActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/course_detail"
             android:launchMode="singleTop">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainScreenActivity" />

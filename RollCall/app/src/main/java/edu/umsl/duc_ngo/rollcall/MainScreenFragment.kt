@@ -25,6 +25,7 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
         super.onViewCreated(view, savedInstanceState)
 
         //Adapter is a data source or a UI table view delegate to a list (which it helps rendering out the items inside of a list)
+        //Since it is already attach to the layout, it can be access directly
         _recyclerview_fg.layoutManager = LinearLayoutManager(activity)
         _recyclerview_fg.adapter = CourseListAdapter()
     }
@@ -34,13 +35,15 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
         if(resultCode != Activity.RESULT_OK) return
         if(data == null) return
 
-        val resultPosition = data.getIntExtra(AttendanceScreenActivity.COURSE_ID, 0)
-        val resultList = data.getParcelableArrayListExtra<StudentData>(AttendanceScreenActivity.STUDENT_LIST)
+        //Initialize variable
+        val resultId = data.getIntExtra(AttendanceScreenActivity.COURSE_ID_RESULT, 0)
+        val resultList = data.getParcelableArrayListExtra<StudentData>(AttendanceScreenActivity.STUDENT_LIST_RESULT)
         var totalPresent = 0
         var totalLate = 0
         var totalAbsence = 0
         var totalUnknown = 0
 
+        //Getting total attendance
         for(l in resultList) {
             when {
                 l.present -> totalPresent++
@@ -50,7 +53,15 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
             }
         }
 
-        courseModel.setCourse(resultPosition, totalPresent, totalLate, totalAbsence, totalUnknown)
+        //Update attendance of the course model
+        courseModel.setCourse(resultId, totalPresent, totalLate, totalAbsence, totalUnknown)
+
+        //Update individual student attendance in the student model
+        //THIS DOESN'T WORK YET
+        for(i in 0..studentModel.getStudentRosterSize(resultId)) {
+            studentModel.setStudent(resultId, i, resultList[i].present, resultList[i].late, resultList[i].absence ,resultList[i].unknown)
+        }
+
         _recyclerview_fg.layoutManager = LinearLayoutManager(activity)
         _recyclerview_fg.adapter = CourseListAdapter()
     }
@@ -102,9 +113,10 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
             val u = "Unknown: " + unknown.toInt().toString() + "%"
 
             customView._no_student_tv.text = ns
-            customView._present_rate_tv.text = p
-            customView._late_rate_tv.text = l
-            customView._unknown_rate_tv.text = u
+            customView._no_present_tv.text = p
+            customView._no_late_tv.text = l
+            customView._no_absence_tv.text = a
+            customView._no_unknown_tv.text = u
 
             //Passing information to clickable row
             courseId = coursePosition
@@ -113,7 +125,7 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
         }
 
         private var listener = View.OnClickListener {
-            val intent = AttendanceScreenActivity.newIntent(activity, courseId, studentModel.getStudentRoster(courseId))
+            val intent = AttendanceScreenActivity.newIntentInit(activity, courseId, studentModel.getStudentRoster(courseId))
             startActivityForResult(intent, 1)
         }
     }
