@@ -5,9 +5,9 @@ import kotlinx.android.parcel.Parcelize
 
 class CourseModel {
     private var courses = listOf(
-        CourseData(0, "Web Development with Advanced JavaScript", "M/W", "CMP SCI 4011", 4011, 5),
-        CourseData(1, "Enterprise Web Development", "M/W", "CMP SCI 4012", 4012, 5),
-        CourseData(2, "Android App Fundamentals", "T/TH", "CMP SCI 4020", 4020, 5)
+        CourseData(0, "Web Development with Advanced JavaScript", "M/W", "CMP SCI 4011", 4011, 6),
+        CourseData(1, "Enterprise Web Development", "M/W", "CMP SCI 4012", 4012, 6),
+        CourseData(2, "Android App Fundamentals", "T/TH", "CMP SCI 4020", 4020, 6)
         )
 
     fun getCourseSize(): Int {
@@ -37,5 +37,5 @@ data class CourseData (
     var no_present: Int = 0,
     var no_late: Int = 0,
     var no_absence: Int = 0,
-    var no_unknown: Int = 5
+    var no_unknown: Int = 6
 ): Parcelable
