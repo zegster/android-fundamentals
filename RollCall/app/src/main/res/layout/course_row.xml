@@ -4,92 +4,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#C8FAFF"
+    android:layout_marginStart="5dp"
+    android:layout_marginTop="2.5dp"
+    android:layout_marginEnd="5dp"
+    android:layout_marginBottom="2.5dp"
+    android:background="@drawable/row_background"
     android:padding="10dp"
     tools:layout_editor_absoluteY="81dp">
 
-    <TextView
-        android:id="@+id/_course_name_tv"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/course_name"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:baselineAligned="false">
 
-    <TextView
-        android:id="@+id/_held_day_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/held_day"
-        android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="@+id/_course_name_tv"
-        app:layout_constraintTop_toBottomOf="@+id/_course_name_tv" />
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/_extended_name_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/extended_name"
-        android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="@+id/_held_day_tv"
-        app:layout_constraintTop_toBottomOf="@+id/_held_day_tv" />
+            <TextView
+                android:id="@+id/_course_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/course_name"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/_course_number_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/course_number"
-        android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="@+id/_extended_name_tv"
-        app:layout_constraintTop_toBottomOf="@+id/_extended_name_tv" />
+            <TextView
+                android:id="@+id/_extended_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/extended_name"
+                android:textColor="#000000" />
 
-    <TextView
-        android:id="@+id/_no_student_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/no_students"
-        android:textColor="#000000"
-        app:layout_constraintStart_toStartOf="@+id/_course_name_tv"
-        app:layout_constraintTop_toBottomOf="@+id/_course_name_tv" />
+            <TextView
+                android:id="@+id/_course_number_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/course_number"
+                android:textColor="#000000" />
 
-    <TextView
-        android:id="@+id/_no_present_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/no_present"
-        android:textColor="#000000"
-        app:layout_constraintStart_toStartOf="@+id/_no_student_tv"
-        app:layout_constraintTop_toBottomOf="@+id/_no_student_tv" />
+            <TextView
+                android:id="@+id/_held_day_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/held_day"
+                android:textColor="#000000" />
 
-    <TextView
-        android:id="@+id/_no_late_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/no_late"
-        android:textColor="#000000"
-        app:layout_constraintStart_toStartOf="@+id/_no_present_tv"
-        app:layout_constraintTop_toBottomOf="@+id/_no_present_tv" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/_no_absence_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/no_absence"
-        android:textColor="#000000"
-        app:layout_constraintStart_toStartOf="@+id/_no_late_tv"
-        app:layout_constraintTop_toBottomOf="@+id/_no_late_tv" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/_no_unknown_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/no_unknown"
-        android:textColor="#000000"
-        app:layout_constraintStart_toStartOf="@+id/_no_absence_tv"
-        app:layout_constraintTop_toBottomOf="@+id/_no_absence_tv" />
+            <TextView
+                android:id="@+id/_no_student_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_students"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/_no_present_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_present"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/_no_late_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_late"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/_no_absence_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_absence"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/_no_unknown_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_unknown"
+                android:textColor="#000000" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

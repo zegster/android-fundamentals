@@ -58,7 +58,7 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
 
         //Update individual student attendance in the student model
         //THIS DOESN'T WORK YET
-        for(i in 0..studentModel.getStudentRosterSize(resultId)) {
+        for(i in 0 until studentModel.getStudentRosterSize(resultId)) {
             studentModel.setStudent(resultId, i, resultList[i].present, resultList[i].late, resultList[i].absence ,resultList[i].unknown)
         }
 
@@ -88,6 +88,7 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
 
 
     inner class CourseListHolder(private val customView: View): RecyclerView.ViewHolder(customView) {
+        private lateinit var courseName: String
         private var courseId: Int = 0
         private lateinit var studentModel: StudentModel
 
@@ -119,13 +120,14 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
             customView._no_unknown_tv.text = u
 
             //Passing information to clickable row
+            courseName = courseModel.getCourse(coursePosition).course_name
             courseId = coursePosition
             this.studentModel = studentModel
             customView.setOnClickListener(listener)
         }
 
         private var listener = View.OnClickListener {
-            val intent = AttendanceScreenActivity.newIntentInit(activity, courseId, studentModel.getStudentRoster(courseId))
+            val intent = AttendanceScreenActivity.newIntentInit(activity, courseName, courseId, studentModel.getStudentRoster(courseId))
             startActivityForResult(intent, 1)
         }
     }

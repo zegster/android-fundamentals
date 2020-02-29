@@ -23,8 +23,6 @@
         <activity android:name=".AttendanceScreenActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainScreenActivity" />
         </activity>
     </application>
 

@@ -1,6 +1,5 @@
 package edu.umsl.duc_ngo.rollcall
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,18 @@ import kotlinx.android.synthetic.main.recyclerview_fragment.*
 import kotlinx.android.synthetic.main.student_row.view.*
 
 class AttendanceScreenFragment(private var listId: Int, private var list: ArrayList<StudentData>): Fragment() {
+    fun invokeResetData() {
+        for(l in list) {
+            l.present = false
+            l.late = false
+            l.absence = false
+            l.unknown = true
+        }
+
+        _recyclerview_fg.layoutManager = LinearLayoutManager(activity)
+        _recyclerview_fg.adapter = StudentListAdapter()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

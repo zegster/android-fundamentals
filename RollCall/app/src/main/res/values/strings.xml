@@ -17,4 +17,6 @@
     <string name="late_radio">Late</string>
     <string name="absence_radio">Absence</string>
     <string name="unknown_radio">Unknown</string>
+
+    <string name="reset_menu">Reset</string>
 </resources>

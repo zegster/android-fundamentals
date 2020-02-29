@@ -10,9 +10,11 @@ class StudentModel {
             StudentData("John"),
             StudentData("Jared"),
             StudentData("Danny"),
-            StudentData("Jackson")),
+            StudentData("Jackson"),
+            StudentData("Bek")),
 
         arrayListOf(
+            StudentData("Duc"),
             StudentData("Allison"),
             StudentData("David"),
             StudentData("Daniel"),
@@ -20,6 +22,7 @@ class StudentModel {
             StudentData("Brandon")),
 
         arrayListOf(
+            StudentData("Duc"),
             StudentData("Austin"),
             StudentData("Ben"),
             StudentData("Jesse"),
