@@ -11,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainScreenActivity"
+        <activity
+            android:name=".ui.MainScreenActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop">
             <intent-filter>
@@ -20,7 +21,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".AttendanceScreenActivity"
+        <activity
+            android:name=".ui.AttendanceScreenActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop">
         </activity>

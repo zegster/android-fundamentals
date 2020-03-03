@@ -1,4 +1,4 @@
-package edu.umsl.duc_ngo.rollcall
+package edu.umsl.duc_ngo.rollcall.data
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
