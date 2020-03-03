@@ -1,4 +1,4 @@
-package edu.umsl.duc_ngo.rollcall
+package edu.umsl.duc_ngo.rollcall.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -7,17 +7,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import edu.umsl.duc_ngo.rollcall.R
+import edu.umsl.duc_ngo.rollcall.data.CourseModel
+import edu.umsl.duc_ngo.rollcall.data.StudentData
+import edu.umsl.duc_ngo.rollcall.data.StudentModel
 import kotlinx.android.synthetic.main.course_row.view.*
 import kotlinx.android.synthetic.main.recyclerview_fragment.*
 
-class MainScreenFragment(private var courseModel: CourseModel, private var studentModel: StudentModel): Fragment() {
+class MainScreenFragment: Fragment() {
+    private lateinit var courseModel: CourseModel
+    private lateinit var studentModel: StudentModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        courseModel = ViewModelProvider(this).get(CourseModel::class.java)
+        studentModel = ViewModelProvider(this).get(StudentModel::class.java)
         return inflater.inflate(R.layout.recyclerview_fragment, container, false)
     }
 
@@ -36,20 +46,20 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
         if(data == null) return
 
         //Initialize variable
-        val resultId = data.getIntExtra(AttendanceScreenActivity.COURSE_ID_RESULT, 0)
-        val resultList = data.getParcelableArrayListExtra<StudentData>(AttendanceScreenActivity.STUDENT_LIST_RESULT)
+        val resultId = data.getIntExtra(AttendanceScreenFragment.COURSE_ID_RESULT, 0)
+        val resultStudents = data.getParcelableArrayListExtra<StudentData>(AttendanceScreenFragment.STUDENT_LIST_RESULT)
         var totalPresent = 0
         var totalLate = 0
         var totalAbsence = 0
         var totalUnknown = 0
 
         //Getting total attendance
-        for(l in resultList) {
+        for(list in resultStudents) {
             when {
-                l.present -> totalPresent++
-                l.late -> totalLate++
-                l.absence -> totalAbsence ++
-                l.unknown -> totalUnknown ++
+                list.present -> totalPresent++
+                list.late -> totalLate++
+                list.absence -> totalAbsence++
+                list.unknown -> totalUnknown++
             }
         }
 
@@ -57,9 +67,8 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
         courseModel.setCourse(resultId, totalPresent, totalLate, totalAbsence, totalUnknown)
 
         //Update individual student attendance in the student model
-        //THIS DOESN'T WORK YET
         for(i in 0 until studentModel.getStudentRosterSize(resultId)) {
-            studentModel.setStudent(resultId, i, resultList[i].present, resultList[i].late, resultList[i].absence ,resultList[i].unknown)
+            studentModel.setStudent(resultId, i, resultStudents[i].present, resultStudents[i].late, resultStudents[i].absence ,resultStudents[i].unknown)
         }
 
         _recyclerview_fg.layoutManager = LinearLayoutManager(activity)
@@ -85,7 +94,6 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
             return CourseListHolder(itemLayoutView)
         }
     }
-
 
     inner class CourseListHolder(private val customView: View): RecyclerView.ViewHolder(customView) {
         private lateinit var courseName: String
@@ -127,7 +135,7 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
         }
 
         private var listener = View.OnClickListener {
-            val intent = AttendanceScreenActivity.newIntentInit(activity, courseName, courseId, studentModel.getStudentRoster(courseId))
+            val intent = AttendanceScreenFragment.newIntentInit(activity, courseName, courseId, studentModel.getStudentRoster(courseId))
             startActivityForResult(intent, 1)
         }
     }
