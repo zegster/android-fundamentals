@@ -1,8 +1,5 @@
 package edu.umsl.duc_ngo.rollcall
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-
 class StudentModel {
     private var students = arrayOf(
         arrayListOf(
@@ -45,12 +42,3 @@ class StudentModel {
         students[rosterId][studentId].unknown = u
     }
 }
-
-@Parcelize
-data class StudentData (
-    val student_name: String,
-    var present: Boolean = false,
-    var late: Boolean = false,
-    var absence: Boolean = false,
-    var unknown: Boolean = true
-): Parcelable
