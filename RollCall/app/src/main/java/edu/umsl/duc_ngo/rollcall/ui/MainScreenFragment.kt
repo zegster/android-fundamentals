@@ -7,12 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.umsl.duc_ngo.rollcall.R
 import edu.umsl.duc_ngo.rollcall.data.CourseModel
-import edu.umsl.duc_ngo.rollcall.data.StudentData
+import edu.umsl.duc_ngo.rollcall.data.ModelHolder
 import edu.umsl.duc_ngo.rollcall.data.StudentModel
 import kotlinx.android.synthetic.main.course_row.view.*
 import kotlinx.android.synthetic.main.recyclerview_fragment.*
@@ -26,13 +25,15 @@ class MainScreenFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        courseModel = ViewModelProvider(this).get(CourseModel::class.java)
-        studentModel = ViewModelProvider(this).get(StudentModel::class.java)
         return inflater.inflate(R.layout.recyclerview_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //Attaching model
+        courseModel = ModelHolder.instance.get(CourseModel::class)!!
+        studentModel = ModelHolder.instance.get(StudentModel::class)!!
 
         //Adapter is a data source or a UI table view delegate to a list (which it helps rendering out the items inside of a list)
         //Since it is already attach to the layout, it can be access directly
@@ -47,7 +48,8 @@ class MainScreenFragment: Fragment() {
 
         //Initialize variable
         val resultId = data.getIntExtra(AttendanceScreenFragment.COURSE_ID_RESULT, 0)
-        val resultStudents = data.getParcelableArrayListExtra<StudentData>(AttendanceScreenFragment.STUDENT_LIST_RESULT)
+        val resultStudents = studentModel.getStudentRoster(resultId)
+
         var totalPresent = 0
         var totalLate = 0
         var totalAbsence = 0
@@ -65,11 +67,7 @@ class MainScreenFragment: Fragment() {
 
         //Update attendance of the course model
         courseModel.setCourse(resultId, totalPresent, totalLate, totalAbsence, totalUnknown)
-
-        //Update individual student attendance in the student model
-        for(i in 0 until studentModel.getStudentRosterSize(resultId)) {
-            studentModel.setStudent(resultId, i, resultStudents[i].present, resultStudents[i].late, resultStudents[i].absence ,resultStudents[i].unknown)
-        }
+        ModelHolder.instance.set(courseModel)
 
         _recyclerview_fg.layoutManager = LinearLayoutManager(activity)
         _recyclerview_fg.adapter = CourseListAdapter()
@@ -135,7 +133,7 @@ class MainScreenFragment: Fragment() {
         }
 
         private var listener = View.OnClickListener {
-            val intent = AttendanceScreenFragment.newIntentInit(activity, courseName, courseId, studentModel.getStudentRoster(courseId))
+            val intent = AttendanceScreenFragment.newIntentInit(activity, courseId)
             startActivityForResult(intent, 1)
         }
     }
