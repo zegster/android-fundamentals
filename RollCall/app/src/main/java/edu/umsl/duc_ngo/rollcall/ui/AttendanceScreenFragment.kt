@@ -10,39 +10,36 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.umsl.duc_ngo.rollcall.R
-import edu.umsl.duc_ngo.rollcall.data.StudentData
+import edu.umsl.duc_ngo.rollcall.data.CourseModel
+import edu.umsl.duc_ngo.rollcall.data.ModelHolder
+import edu.umsl.duc_ngo.rollcall.data.StudentModel
 import kotlinx.android.synthetic.main.recyclerview_fragment.*
 import kotlinx.android.synthetic.main.student_row.view.*
 
 class AttendanceScreenFragment: Fragment() {
     private var courseId: Int = 0
-    private lateinit var studentList: ArrayList<StudentData>
+    private lateinit var courseModel: CourseModel
+    private lateinit var studentModel: StudentModel
 
 
     companion object {
-        const val COURSE_NAME_INIT = "edu.umsl.duc_ngo.courseNameInit"
         const val COURSE_ID_INIT = "edu.umsl.duc_ngo.courseIdInit"
-        const val STUDENT_LIST_INIT = "edu.umsl.duc_ngo.courseListInit"
         const val COURSE_ID_RESULT = "edu.umsl.duc_ngo.courseIdResult"
-        const val STUDENT_LIST_RESULT = "edu.umsl.duc_ngo.courseListResult"
 
         lateinit var intent: Intent
 
         @JvmStatic
-        fun newIntentInit(context: FragmentActivity?, courseName: String, courseId: Int, students: ArrayList<StudentData>): Intent {
+        fun newIntentInit(context: FragmentActivity?, courseId: Int): Intent {
             val intent = Intent(context, AttendanceScreenActivity::class.java)
             Companion.intent = intent
-            intent.putExtra(COURSE_NAME_INIT, courseName)
             intent.putExtra(COURSE_ID_INIT, courseId)
-            intent.putExtra(STUDENT_LIST_INIT, students)
             return intent
         }
 
         @JvmStatic
-        fun newIntentResult(context: FragmentActivity?, courseId: Int, students: ArrayList<StudentData>) {
+        fun newIntentResult(context: FragmentActivity?, courseId: Int) {
             intent = Intent(context, AttendanceScreenActivity::class.java)
             intent.putExtra(COURSE_ID_RESULT, courseId)
-            intent.putExtra(STUDENT_LIST_RESULT, students)
         }
     }
 
@@ -58,9 +55,12 @@ class AttendanceScreenFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //Getting Model
+        courseModel = ModelHolder.instance.get(CourseModel::class)!!
+        studentModel = ModelHolder.instance.get(StudentModel::class)!!
+
         //Getting intent value
         courseId = intent.getIntExtra(COURSE_ID_INIT, 0)
-        studentList = intent.getParcelableArrayListExtra<StudentData>(STUDENT_LIST_INIT)
 
         //Adapter is a data source or a UI table view delegate to a list (which it helps rendering out the items inside of a list)
         _recyclerview_fg.layoutManager = LinearLayoutManager(activity)
@@ -71,7 +71,7 @@ class AttendanceScreenFragment: Fragment() {
     inner class StudentListAdapter: RecyclerView.Adapter<StudentViewHolder>() {
         /* Return number of items to render */
         override fun getItemCount(): Int {
-            return studentList.size
+            return studentModel.getStudentRosterSize(courseId)
         }
 
         /* Called by RecyclerView to display the data at the specified position.
@@ -92,7 +92,7 @@ class AttendanceScreenFragment: Fragment() {
 
     //Reset the attendance
     fun invokeResetData() {
-        for(list in studentList) {
+        for(list in studentModel.getStudentRoster(courseId)) {
             list.present = false
             list.late = false
             list.absence = false
@@ -106,6 +106,7 @@ class AttendanceScreenFragment: Fragment() {
     inner class StudentViewHolder(private val customView: View): RecyclerView.ViewHolder(customView) {
         fun studentBind(position: Int) {
             //Pre-populate value
+            val studentList = studentModel.getStudentRoster(courseId)
             customView._student_name_tv.text = studentList[position].student_name
             customView._student_attendance_rbtng.clearCheck()
             when {
@@ -140,7 +141,7 @@ class AttendanceScreenFragment: Fragment() {
             }
 
             //Make sure the return intent is not null
-            newIntentResult(activity, courseId, studentList)
+            newIntentResult(activity, courseId)
 
             //Present Radio Button
             customView._present_rbtn.setOnClickListener{
@@ -152,7 +153,10 @@ class AttendanceScreenFragment: Fragment() {
                 studentList[position].unknown = false
 
                 //Return updated list
-                newIntentResult(activity, courseId, studentList)
+                newIntentResult(activity, courseId)
+
+                studentModel.setStudent(courseId, position, studentList[courseId].present, studentList[courseId].late, studentList[courseId].absence ,studentList[courseId].unknown)
+                ModelHolder.instance.set(studentModel)
             }
 
             //Late Radio Button
@@ -165,7 +169,10 @@ class AttendanceScreenFragment: Fragment() {
                 studentList[position].unknown = false
 
                 //Return updated list
-                newIntentResult(activity, courseId, studentList)
+                newIntentResult(activity, courseId)
+
+                studentModel.setStudent(courseId, position, studentList[courseId].present, studentList[courseId].late, studentList[courseId].absence ,studentList[courseId].unknown)
+                ModelHolder.instance.set(studentModel)
             }
 
             //Absence Radio Button
@@ -178,7 +185,10 @@ class AttendanceScreenFragment: Fragment() {
                 studentList[position].unknown = false
 
                 //Return updated list
-                newIntentResult(activity, courseId, studentList)
+                newIntentResult(activity, courseId)
+
+                studentModel.setStudent(courseId, position, studentList[courseId].present, studentList[courseId].late, studentList[courseId].absence ,studentList[courseId].unknown)
+                ModelHolder.instance.set(studentModel)
             }
 
             //Unknown Radio Button
@@ -191,7 +201,10 @@ class AttendanceScreenFragment: Fragment() {
                 studentList[position].unknown = true
 
                 //Return updated list
-                newIntentResult(activity, courseId, studentList)
+                newIntentResult(activity, courseId)
+
+                studentModel.setStudent(courseId, position, studentList[courseId].present, studentList[courseId].late, studentList[courseId].absence ,studentList[courseId].unknown)
+                ModelHolder.instance.set(studentModel)
             }
         }
     }

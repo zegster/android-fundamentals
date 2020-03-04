@@ -8,9 +8,12 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import edu.umsl.duc_ngo.rollcall.R
+import edu.umsl.duc_ngo.rollcall.data.CourseModel
+import edu.umsl.duc_ngo.rollcall.data.ModelHolder
 import es.dmoral.toasty.Toasty
 
 class AttendanceScreenActivity: AppCompatActivity() {
+    private lateinit var courseModel: CourseModel
     lateinit var mainViewFragment: AttendanceScreenFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +22,11 @@ class AttendanceScreenActivity: AppCompatActivity() {
 
         //Set up back button
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        title = AttendanceScreenFragment.intent.getStringExtra(AttendanceScreenFragment.COURSE_NAME_INIT)
+
+        courseModel = ModelHolder.instance.get(CourseModel::class)!!
+        val courseId = AttendanceScreenFragment.intent.getIntExtra(AttendanceScreenFragment.COURSE_ID_INIT, 0)
+        title = courseModel.getCourse(courseId).course_name
+
 
         mainViewFragment = AttendanceScreenFragment()
         if(savedInstanceState == null) {
