@@ -1,4 +1,4 @@
-package edu.umsl.duc_ngo.rollcall
+package edu.umsl.duc_ngo.rollcall.data
 
 import java.lang.ref.WeakReference
 import kotlin.reflect.KClass

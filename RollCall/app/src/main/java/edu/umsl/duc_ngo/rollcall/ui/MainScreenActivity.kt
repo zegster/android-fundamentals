@@ -1,7 +1,11 @@
-package edu.umsl.duc_ngo.rollcall
+package edu.umsl.duc_ngo.rollcall.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import edu.umsl.duc_ngo.rollcall.R
+import edu.umsl.duc_ngo.rollcall.data.CourseModel
+import edu.umsl.duc_ngo.rollcall.data.ModelHolder
+import edu.umsl.duc_ngo.rollcall.data.StudentModel
 
 class MainScreenActivity : AppCompatActivity() {
     private lateinit var courseModel: CourseModel
@@ -11,20 +15,13 @@ class MainScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_screen)
 
-        savedInstanceState?.let{
-            courseModel = CourseModel()
-            studentModel = StudentModel()
-        }
+        //Initialize model
+        courseModel = ModelHolder.instance.get(CourseModel::class) ?: CourseModel()
+        ModelHolder.instance.set(courseModel)
+        studentModel = ModelHolder.instance.get(StudentModel::class) ?: StudentModel()
+        ModelHolder.instance.set(studentModel)
 
-        if(!::courseModel.isInitialized) {
-            courseModel = CourseModel()
-        }
-
-        if(!::studentModel.isInitialized) {
-            studentModel = StudentModel()
-        }
-
-        val mainViewFragment = MainScreenFragment(courseModel, studentModel)
+        val mainViewFragment = MainScreenFragment()
         if(savedInstanceState == null)
         {
             //Get the layout ID you want to inject, and pass in the fragment you want to inject into

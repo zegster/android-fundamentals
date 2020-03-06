@@ -1,14 +1,17 @@
-package edu.umsl.duc_ngo.rollcall
+package edu.umsl.duc_ngo.rollcall.data
 
-class StudentModel {
-    private var students = arrayOf(
+import androidx.lifecycle.ViewModel
+
+class StudentModel: ViewModel() {
+    private var studentList = arrayOf(
         arrayListOf(
             StudentData("Duc"),
             StudentData("John"),
             StudentData("Jared"),
             StudentData("Danny"),
             StudentData("Jackson"),
-            StudentData("Bek")),
+            StudentData("Bek")
+        ),
 
         arrayListOf(
             StudentData("Duc"),
@@ -16,7 +19,8 @@ class StudentModel {
             StudentData("David"),
             StudentData("Daniel"),
             StudentData("James"),
-            StudentData("Brandon")),
+            StudentData("Brandon")
+        ),
 
         arrayListOf(
             StudentData("Duc"),
@@ -24,21 +28,22 @@ class StudentModel {
             StudentData("Ben"),
             StudentData("Jesse"),
             StudentData("Luke"),
-            StudentData("Matt"))
+            StudentData("Matt")
+        )
     )
 
     fun getStudentRoster(id: Int): ArrayList<StudentData> {
-        return students[id]
+        return studentList[id]
     }
 
     fun getStudentRosterSize(id: Int): Int {
-        return students[id].size
+        return studentList[id].size
     }
 
     fun setStudent(rosterId: Int, studentId: Int, p: Boolean, l: Boolean, a: Boolean, u: Boolean) {
-        students[rosterId][studentId].present = p
-        students[rosterId][studentId].late = l
-        students[rosterId][studentId].absence = a
-        students[rosterId][studentId].unknown = u
+        studentList[rosterId][studentId].present = p
+        studentList[rosterId][studentId].late = l
+        studentList[rosterId][studentId].absence = a
+        studentList[rosterId][studentId].unknown = u
     }
 }

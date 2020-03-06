@@ -1,4 +1,4 @@
-package edu.umsl.duc_ngo.rollcall
+package edu.umsl.duc_ngo.rollcall.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -9,10 +9,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import edu.umsl.duc_ngo.rollcall.R
+import edu.umsl.duc_ngo.rollcall.data.CourseModel
+import edu.umsl.duc_ngo.rollcall.data.ModelHolder
+import edu.umsl.duc_ngo.rollcall.data.StudentModel
 import kotlinx.android.synthetic.main.course_row.view.*
 import kotlinx.android.synthetic.main.recyclerview_fragment.*
 
-class MainScreenFragment(private var courseModel: CourseModel, private var studentModel: StudentModel): Fragment() {
+class MainScreenFragment: Fragment() {
+    private lateinit var courseModel: CourseModel
+    private lateinit var studentModel: StudentModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -23,6 +30,10 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //Attaching model
+        courseModel = ModelHolder.instance.get(CourseModel::class)!!
+        studentModel = ModelHolder.instance.get(StudentModel::class)!!
 
         //Adapter is a data source or a UI table view delegate to a list (which it helps rendering out the items inside of a list)
         //Since it is already attach to the layout, it can be access directly
@@ -36,31 +47,27 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
         if(data == null) return
 
         //Initialize variable
-        val resultId = data.getIntExtra(AttendanceScreenActivity.COURSE_ID_RESULT, 0)
-        val resultList = data.getParcelableArrayListExtra<StudentData>(AttendanceScreenActivity.STUDENT_LIST_RESULT)
+        val resultId = data.getIntExtra(AttendanceScreenFragment.COURSE_ID_RESULT, 0)
+        val resultStudents = studentModel.getStudentRoster(resultId)
+
         var totalPresent = 0
         var totalLate = 0
         var totalAbsence = 0
         var totalUnknown = 0
 
         //Getting total attendance
-        for(l in resultList) {
+        for(list in resultStudents) {
             when {
-                l.present -> totalPresent++
-                l.late -> totalLate++
-                l.absence -> totalAbsence ++
-                l.unknown -> totalUnknown ++
+                list.present -> totalPresent++
+                list.late -> totalLate++
+                list.absence -> totalAbsence++
+                list.unknown -> totalUnknown++
             }
         }
 
         //Update attendance of the course model
         courseModel.setCourse(resultId, totalPresent, totalLate, totalAbsence, totalUnknown)
-
-        //Update individual student attendance in the student model
-        //THIS DOESN'T WORK YET
-        for(i in 0 until studentModel.getStudentRosterSize(resultId)) {
-            studentModel.setStudent(resultId, i, resultList[i].present, resultList[i].late, resultList[i].absence ,resultList[i].unknown)
-        }
+        ModelHolder.instance.set(courseModel)
 
         _recyclerview_fg.layoutManager = LinearLayoutManager(activity)
         _recyclerview_fg.adapter = CourseListAdapter()
@@ -85,7 +92,6 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
             return CourseListHolder(itemLayoutView)
         }
     }
-
 
     inner class CourseListHolder(private val customView: View): RecyclerView.ViewHolder(customView) {
         private lateinit var courseName: String
@@ -127,7 +133,7 @@ class MainScreenFragment(private var courseModel: CourseModel, private var stude
         }
 
         private var listener = View.OnClickListener {
-            val intent = AttendanceScreenActivity.newIntentInit(activity, courseName, courseId, studentModel.getStudentRoster(courseId))
+            val intent = AttendanceScreenFragment.newIntentInit(activity, courseId)
             startActivityForResult(intent, 1)
         }
     }
