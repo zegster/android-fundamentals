@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Simon Says</string>
     <string name="start_game">Start Game</string>
+    <string name="high_score">High Score</string>
+
+    <string name="player">Player</string>
     <string name="score">Score</string>
 </resources>

@@ -1,8 +1,8 @@
-package edu.umsl.duc_ngo.simonsays
+package edu.umsl.duc_ngo.simonsays.ui.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import edu.umsl.duc_ngo.simonsays.ui.main.MainFragment
+import edu.umsl.duc_ngo.simonsays.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

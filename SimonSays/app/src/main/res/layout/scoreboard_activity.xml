@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/_main_activity"
+    android:id="@+id/_scoreboard_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity" >
+    tools:context=".ui.scoreboard.ScoreboardActivity" >
 
 </androidx.constraintlayout.widget.ConstraintLayout>
