@@ -11,7 +11,7 @@ class GameActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .add(R.id.container, GameFragment.newInstance())
+                .add(R.id._game_activity, GameFragment.newInstance())
                 .commit()
         }
     }
