@@ -4,14 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import edu.umsl.duc_ngo.simonsays.R
-import edu.umsl.duc_ngo.simonsays.data.PlayerData
-import edu.umsl.duc_ngo.simonsays.data.SimonDatabase
 import edu.umsl.duc_ngo.simonsays.ui.BaseFragment
-import es.dmoral.toasty.Toasty
+import edu.umsl.duc_ngo.simonsays.ui.game.DifficultyFragment
+import edu.umsl.duc_ngo.simonsays.ui.scoreboard.ScoreboardFragment
 import kotlinx.android.synthetic.main.main_fragment.*
-import kotlinx.coroutines.launch
 
 private const val TAG = "MainFragment"
 class MainFragment : BaseFragment() {
@@ -26,23 +23,30 @@ class MainFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        /* Starting the GameActivity */
         _start_game_btn.setOnClickListener {
-            //Simplified version of async database operation with the help of Kotlin Coroutines
-            launch {
-                val playerData = PlayerData(99)
-                context?.let {
-                    SimonDatabase(it).getPlayerDataDao().addPlayer(playerData)
-                    Toasty.info(it, "New Player Score Registered!", Toast.LENGTH_SHORT, true).show();
-                }
+            if (savedInstanceState == null) {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id._main_activity, DifficultyFragment.newInstance())
+                    .addToBackStack(null)
+                    .commit()
             }
+        }
+
+        /* View scoreboard screen */
+        _high_score_btn.setOnClickListener {
+            val intent = ScoreboardFragment.newIntentInit(activity)
+            startActivity(intent)
         }
     }
 
-    //You can't access the database in the main thread, it will crash if you do so.
-    //Whenever we want to do database operation, we want to do it asynchronously.
-    //Room doesn't allow us to perform the database operation in main thread because it can take a long time.
-    //We can use Kotlin Coroutines to reduce/minimize the async lengthy process/code (old references below)
-    //Function Call: savePlayerData(playerData)
+
+    /* You can't access the database in the main thread, it will crash if you do so.
+        Whenever we want to do database operation, we want to do it asynchronously.
+        Room doesn't allow us to perform the database operation in main thread because it can take a long time.
+        We can use Kotlin Coroutines to reduce/minimize the async lengthy process/code (old references below).
+        In other words, we can use simplified version of async database operation with the help of Kotlin Coroutines (using launch).
+        Function Call: savePlayerData(playerData) */
     /*
     private fun savePlayerData(playerData: PlayerData) {
         class SavePlayerData : AsyncTask<Void, Void, Void>() {
@@ -60,30 +64,4 @@ class MainFragment : BaseFragment() {
         SavePlayerData().execute()
     }
     */
-
-
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        initializeUi()
-//    }
-
-//    private lateinit var viewModel: MainViewModel
-//    private fun initializeUi() {
-//        val factory = InjectorUtils.provideMainViewModelFactory()
-//        var currentScore = 0
-//
-//        viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
-//        viewModel.getPlayer().observe(viewLifecycleOwner, Observer {
-//            Log.i(TAG, it.score.toString())
-//            _score_txt.text = it.score.toString()
-//            currentScore = it.score
-//        })
-//
-//        _start_game_btn.setOnClickListener {
-//            val playerData = PlayerData(++currentScore)
-//            viewModel.updatePlayer(playerData)
-//            _score_txt.text = currentScore.toString()
-//        }
-//    }
 }

@@ -23,6 +23,6 @@ interface PlayerDataDao {
     @Insert
     suspend fun addPlayer(playerData: PlayerData)
 
-    @Query("SELECT * FROM PlayerData")
+    @Query("SELECT * FROM PlayerData ORDER BY score")
     suspend fun getAllPlayers() : List<PlayerData>
 }

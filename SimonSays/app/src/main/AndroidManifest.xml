@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".ui.game.GameActivity"></activity>
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTop">
@@ -19,7 +19,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.scoreboard.ScoreboardActivity"
             android:launchMode="singleTop" />
