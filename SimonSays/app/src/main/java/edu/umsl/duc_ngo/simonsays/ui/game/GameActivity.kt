@@ -1,7 +1,7 @@
 package edu.umsl.duc_ngo.simonsays.ui.game
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import edu.umsl.duc_ngo.simonsays.R
 
 class GameActivity : AppCompatActivity() {

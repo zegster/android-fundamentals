@@ -4,20 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 
-//class PlayerDataDao {
-//    private val playerData = MutableLiveData<PlayerData>()
-//
-//    init {
-//        playerData.postValue(PlayerData(0))
-//    }
-//
-//    fun updatePlayer(newData: PlayerData) {
-//        playerData.value = newData
-//    }
-//
-//    fun getPlayer() = playerData as LiveData<PlayerData>
-//}
-
 @Dao
 interface PlayerDataDao {
     @Insert

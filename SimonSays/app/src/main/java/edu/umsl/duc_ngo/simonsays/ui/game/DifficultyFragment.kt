@@ -8,6 +8,7 @@ import edu.umsl.duc_ngo.simonsays.R
 import edu.umsl.duc_ngo.simonsays.ui.BaseFragment
 import kotlinx.android.synthetic.main.difficulty_fragment.*
 
+private const val TAG = "DifficultyFragment"
 class DifficultyFragment : BaseFragment() {
     companion object {
         fun newInstance() = DifficultyFragment()

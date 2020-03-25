@@ -4,20 +4,6 @@ import android.content.Context
 import androidx.room.*
 import androidx.room.Database
 
-//class Database private constructor() {
-//    companion object {
-//        @Volatile private var instance: Database? = null
-//
-//        fun getInstance() = instance ?: synchronized(this) {
-//            instance ?: Database().also { instance = it }
-//        }
-//    }
-//
-//    //Init DAO
-//    var playerDataDao = PlayerDataDao()
-//        private set
-//}
-
 @Database(
     entities = [PlayerData::class],
     version = 1

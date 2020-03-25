@@ -1,8 +1,9 @@
 package edu.umsl.duc_ngo.simonsays.ui.game
 
-import android.animation.*
+import android.animation.Animator
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -12,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -43,10 +43,13 @@ class GameFragment : BaseFragment() {
     }
 
     private lateinit var viewModel: GameViewModel
-    private lateinit var handler: Handler
-    private lateinit var runnable: Runnable
+    private var delayHandler: Handler? = null
+    private var delayRunnable: Runnable? = null
+    private var animationHandler: Handler? = null
+    private var animationRunnable: Runnable? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
         return inflater.inflate(R.layout.game_fragment, container, false)
     }
 
@@ -54,9 +57,8 @@ class GameFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        enabledButton(false)
+        //Only create a new sequence when the game haven't start yet
         val difficulty = intent.getIntExtra(DIFFICULTY, 0)
-        viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
         viewModel.initSequence(difficulty)
 
         //Keep track of score change
@@ -65,58 +67,63 @@ class GameFragment : BaseFragment() {
         })
 
         //Keep track of simon sequence change
-        viewModel.getSequence().observe(viewLifecycleOwner, Observer {sequence ->
-            if(viewModel.isUpdating() == true) {
-                Log.e(TAG, sequence.toString())
+        viewModel.isFinishUpdate().observe(viewLifecycleOwner, Observer {isFinishUpdate ->
+            if(isFinishUpdate == true && viewModel.isGameOver().value == false) {
+                Log.e(TAG, viewModel.getSequence().value.toString())
 
-                val animationSequence = mutableListOf<ValueAnimator>()
+                viewModel.stopTime()
+                enabledButton(false)
+                _who_turn_label.setText(R.string.ready)
 
-                activity?.let {activity ->
-                    for((index, seq) in sequence.withIndex()) {
-                        val view = when(seq) {
-                            0 -> _red_btn
-                            1 -> _yellow_btn
-                            2 -> _green_btn
-                            3 -> _blue_btn
-                            else -> _red_btn
-                        }
-
-                        val originalColor = view.background as? ColorDrawable
-                        val targetColor = ContextCompat.getColor(activity, R.color.colorTarget)
-
-                        val animator = ValueAnimator.ofObject(
-                            ArgbEvaluator(),
-                            originalColor?.color, targetColor, originalColor?.color
-                        )
-
-                        animator.addUpdateListener {valueAnimator ->
-                            (valueAnimator.animatedValue as? Int)?.let {animatedValue ->
-                                view.setBackgroundColor(animatedValue)
+                //Create delay handler and animation sequence
+                val animationSequence = mutableListOf<Animator>()
+                delayHandler = Handler()
+                delayRunnable = Runnable {
+                    _who_turn_label.setText(R.string.simon_turn)
+                    activity?.let {
+                        for((index, seq) in viewModel.getSequence().value?.withIndex()!!) {
+                            val view = when(seq) {
+                                0 -> _red_btn
+                                1 -> _yellow_btn
+                                2 -> _green_btn
+                                3 -> _blue_btn
+                                else -> _red_btn
                             }
+
+                            val objectAnimator = ObjectAnimator.ofFloat(view, "alpha", 0.25f, 1.0f)
+                            objectAnimator.target = view
+                            objectAnimator.startDelay = ( index * 100 ).toLong()
+                            objectAnimator.duration = ( 1000 - (200 * difficulty) ).toLong()
+                            animationSequence.add(objectAnimator)
                         }
-
-                        animator?.startDelay = ( 100 + ((index + 1) * 100) ).toLong()
-                        animator?.duration = 1000.toLong()
-                        animationSequence.add(animator)
                     }
-                }
 
-                val animatorSet = AnimatorSet()
-                animatorSet.playSequentially(animationSequence as List<Animator>?)
-                animatorSet.start()
+                    //Update animation sequence
+                    val animatorSet = AnimatorSet()
+                    animatorSet.playSequentially(animationSequence)
+                    animatorSet.start()
 
-                handler = Handler()
-                runnable = Runnable {
-                    enabledButton(true)
-                    viewModel.startTime()
+                    //Create animation handler
+                    animationHandler = Handler()
+                    animationRunnable = Runnable {
+                        enabledButton(true)
+                        viewModel.startTime()
+                        _who_turn_label.setText(R.string.player_turn)
+                    }
+                    animationHandler?.postDelayed(animationRunnable, animatorSet.totalDuration)
                 }
-                handler.postDelayed(runnable, animatorSet.totalDuration)
+                delayHandler?.postDelayed(delayRunnable,3000)
             }
         })
 
         //Keep track if the game is over
         viewModel.isGameOver().observe(viewLifecycleOwner, Observer {isGameOver ->
-            if(isGameOver == true) {
+            if(isGameOver == true && viewModel.isScoreRegister().value == false) {
+                viewModel.stopTime()
+                viewModel.gameFinish()
+                enabledButton(false)
+                _who_turn_label.setText(R.string.miss)
+
                 launch {
                     val playerData = PlayerData(viewModel.getScore().value!!)
                     context?.let {
@@ -127,7 +134,7 @@ class GameFragment : BaseFragment() {
                         Toasty.info(it, "Next sequence was: " + viewModel.lastSequence(), Toast.LENGTH_LONG, true).show();
                         Toasty.info(it, "Score Registered: " + viewModel.getScore().value!!, Toast.LENGTH_SHORT, true).show();
                         parentFragmentManager.beginTransaction()
-                            .replace(R.id._game_activity, ScoreboardFragment.newInstance())
+                            .add(R.id._game_activity, GameoverFragment.newInstance())
                             .commit()
                     }
                 }
@@ -164,7 +171,8 @@ class GameFragment : BaseFragment() {
     }
 
     override fun onDestroy() {
-        handler.removeCallbacks(runnable)
+        delayHandler?.removeCallbacks(delayRunnable)
+        animationHandler?.removeCallbacks(animationRunnable)
         super.onDestroy()
     }
 
