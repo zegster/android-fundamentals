@@ -7,11 +7,12 @@ import androidx.lifecycle.ViewModel
 
 class GameViewModel : ViewModel() {
     private var currentScore = MutableLiveData<Int>()
-
     private var difficulty = MutableLiveData<Int>()
+
     private var isGeneratingSequence = MutableLiveData<Boolean>()
     private var currentIndex = MutableLiveData<Int>()
     private var sequenceList = mutableListOf<Int>()
+    private var sequenceListLeft = mutableListOf<Int>()
     private var simonSequence = MutableLiveData<List<Int>>()
 
     private var isGameStarted = MutableLiveData<Boolean>()
@@ -19,6 +20,7 @@ class GameViewModel : ViewModel() {
     private var isGameOver = MutableLiveData<Boolean>()
     private var isScoreRegister = MutableLiveData<Boolean>()
 
+    private val defaultTimeLeft = 20000
     private var timer: CountDownTimer? = null
     private var timeLeft = MutableLiveData<Long>()
 
@@ -63,7 +65,7 @@ class GameViewModel : ViewModel() {
             this.difficulty.value = difficulty
             generateRandomSequence(difficulty)
             isGameStarted.value = true
-            timeLeft.value = ((9000 - (3000 * difficulty.toLong())) / 1000) % 60
+            timeLeft.value = ((defaultTimeLeft - 1000 - (3000 * difficulty.toLong())) / 1000) % 60
         }
     }
 
@@ -92,6 +94,7 @@ class GameViewModel : ViewModel() {
                 else -> { /* Empty */ }
             }
             simonSequence.value = sequenceList
+            sequenceListLeft = sequenceList.toMutableList()
             isGeneratingSequence.value = false
             isFinishUpdate.value = true
         }
@@ -105,13 +108,20 @@ class GameViewModel : ViewModel() {
         generateRandomSequence(difficulty.value!!)
     }
 
+    fun updateSequenceLeft() {
+        if(sequenceListLeft.isNotEmpty()) {
+            sequenceListLeft.removeAt(0)
+            simonSequence.value = sequenceListLeft
+        }
+    }
+
     /* Game */
     fun getTime(): LiveData<Long> {
         return timeLeft
     }
 
     fun startTime() {
-        timer = object : CountDownTimer(10000 - (3000 * difficulty.value?.toLong()!!), 1000) {
+        timer = object : CountDownTimer(defaultTimeLeft - (3000 * difficulty.value?.toLong()!!), 1000) {
             override fun onFinish() {
                 isGameOver.value = true
             }
@@ -128,7 +138,7 @@ class GameViewModel : ViewModel() {
 
     fun resetTime() {
         timer?.cancel()
-        timer = object : CountDownTimer(10000 - (3000 * difficulty.value!!.toLong()), 1000) {
+        timer = object : CountDownTimer(defaultTimeLeft - (3000 * difficulty.value!!.toLong()), 1000) {
             override fun onFinish() {
                 isGameOver.value = true
             }

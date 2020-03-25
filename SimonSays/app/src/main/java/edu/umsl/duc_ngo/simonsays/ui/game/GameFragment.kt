@@ -20,7 +20,6 @@ import edu.umsl.duc_ngo.simonsays.R
 import edu.umsl.duc_ngo.simonsays.data.PlayerData
 import edu.umsl.duc_ngo.simonsays.data.SimonDatabase
 import edu.umsl.duc_ngo.simonsays.ui.BaseFragment
-import edu.umsl.duc_ngo.simonsays.ui.scoreboard.ScoreboardFragment
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.game_fragment.*
 import kotlinx.coroutines.launch
@@ -43,6 +42,7 @@ class GameFragment : BaseFragment() {
     }
 
     private lateinit var viewModel: GameViewModel
+    private var animatorSet: AnimatorSet? = null
     private var delayHandler: Handler? = null
     private var delayRunnable: Runnable? = null
     private var animationHandler: Handler? = null
@@ -67,10 +67,9 @@ class GameFragment : BaseFragment() {
         })
 
         //Keep track of simon sequence change
+        enabledButton(false)
         viewModel.isFinishUpdate().observe(viewLifecycleOwner, Observer {isFinishUpdate ->
             if(isFinishUpdate == true && viewModel.isGameOver().value == false) {
-                Log.e(TAG, viewModel.getSequence().value.toString())
-
                 viewModel.stopTime()
                 enabledButton(false)
                 _who_turn_label.setText(R.string.ready)
@@ -94,23 +93,32 @@ class GameFragment : BaseFragment() {
                             objectAnimator.target = view
                             objectAnimator.startDelay = ( index * 100 ).toLong()
                             objectAnimator.duration = ( 1000 - (200 * difficulty) ).toLong()
+                            objectAnimator.addListener(object : Animator.AnimatorListener {
+                                override fun onAnimationStart(animation: Animator?) {}
+                                override fun onAnimationEnd(animation: Animator?) {
+                                    viewModel.updateSequenceLeft()
+                                }
+                                override fun onAnimationCancel(animation: Animator?) {}
+                                override fun onAnimationRepeat(animation: Animator?) {}
+
+                            })
                             animationSequence.add(objectAnimator)
                         }
                     }
 
                     //Update animation sequence
-                    val animatorSet = AnimatorSet()
-                    animatorSet.playSequentially(animationSequence)
-                    animatorSet.start()
+                    animatorSet = AnimatorSet()
+                    animatorSet?.playSequentially(animationSequence)
+                    animatorSet?.start()
 
-                    //Create animation handler
+                    //Create animation handler, turn on button when animation is done
                     animationHandler = Handler()
                     animationRunnable = Runnable {
                         enabledButton(true)
                         viewModel.startTime()
                         _who_turn_label.setText(R.string.player_turn)
                     }
-                    animationHandler?.postDelayed(animationRunnable, animatorSet.totalDuration)
+                    animationHandler?.postDelayed(animationRunnable, animatorSet?.totalDuration!!)
                 }
                 delayHandler?.postDelayed(delayRunnable,3000)
             }
@@ -171,6 +179,9 @@ class GameFragment : BaseFragment() {
     }
 
     override fun onDestroy() {
+        animatorSet?.pause()
+        animatorSet?.removeAllListeners()
+        animatorSet = null
         delayHandler?.removeCallbacks(delayRunnable)
         animationHandler?.removeCallbacks(animationRunnable)
         super.onDestroy()
