@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
-
-    <color name="colorTarget">#000000</color>
-    <color name="colorFailed">#FF0000</color>
-    <color name="colorSucceed">#00FF00</color>
+    <color name="colorPrimary">#00BCD4</color>
+    <color name="colorPrimaryDark">#3F51B5</color>
+    <color name="colorAccent">#8BC34A</color>
 </resources>

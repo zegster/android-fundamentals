@@ -20,8 +20,9 @@ class GameViewModel : ViewModel() {
     private var isGameOver = MutableLiveData<Boolean>()
     private var isScoreRegister = MutableLiveData<Boolean>()
 
-    private val defaultTimeLeft = 20000
+    private val defaultTimeLeft: Long = 10000
     private var timer: CountDownTimer? = null
+    private var millisecondLeft: Long = 0
     private var timeLeft = MutableLiveData<Long>()
 
     init {
@@ -65,7 +66,8 @@ class GameViewModel : ViewModel() {
             this.difficulty.value = difficulty
             generateRandomSequence(difficulty)
             isGameStarted.value = true
-            timeLeft.value = ((defaultTimeLeft - 1000 - (3000 * difficulty.toLong())) / 1000) % 60
+            timeLeft.value = ( ((defaultTimeLeft - 1000 - (3000 * difficulty)) / 1000) % 60 ).toLong()
+            millisecondLeft = ( defaultTimeLeft - (3000 * difficulty) ).toLong()
         }
     }
 
@@ -120,13 +122,14 @@ class GameViewModel : ViewModel() {
         return timeLeft
     }
 
-    fun startTime() {
-        timer = object : CountDownTimer(defaultTimeLeft - (3000 * difficulty.value?.toLong()!!), 1000) {
+    fun resumeTime() {
+        timer = object : CountDownTimer(millisecondLeft, 1000) {
             override fun onFinish() {
                 isGameOver.value = true
             }
             override fun onTick(millisUntilFinished: Long) {
                 timeLeft.value = (millisUntilFinished / 1000) % 60
+                millisecondLeft = millisUntilFinished
             }
         }
         timer?.start()
@@ -138,12 +141,13 @@ class GameViewModel : ViewModel() {
 
     fun resetTime() {
         timer?.cancel()
-        timer = object : CountDownTimer(defaultTimeLeft - (3000 * difficulty.value!!.toLong()), 1000) {
+        timer = object : CountDownTimer(( defaultTimeLeft - (3000 * difficulty.value!!) ).toLong(), 1000) {
             override fun onFinish() {
                 isGameOver.value = true
             }
             override fun onTick(millisUntilFinished: Long) {
                 timeLeft.value = (millisUntilFinished / 1000)
+                millisecondLeft = millisUntilFinished
             }
         }
         timer?.start()

@@ -25,12 +25,10 @@ class MainFragment : BaseFragment() {
 
         /* Starting the GameActivity */
         _start_game_btn.setOnClickListener {
-            if (savedInstanceState == null) {
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id._main_activity, DifficultyFragment.newInstance())
-                    .addToBackStack(null)
-                    .commit()
-            }
+            parentFragmentManager.beginTransaction()
+                .replace(R.id._main_activity, DifficultyFragment.newInstance())
+                .addToBackStack(null)
+                .commit()
         }
 
         /* View scoreboard screen */

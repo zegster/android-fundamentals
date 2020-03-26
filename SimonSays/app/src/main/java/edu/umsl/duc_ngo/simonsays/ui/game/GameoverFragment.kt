@@ -9,7 +9,7 @@ import edu.umsl.duc_ngo.simonsays.ui.BaseFragment
 import edu.umsl.duc_ngo.simonsays.ui.scoreboard.ScoreboardFragment
 import kotlinx.android.synthetic.main.gameover_fragment.*
 
-private const val TAG = "GameOverFragment"
+private const val TAG = "GameoverFragment"
 class GameoverFragment: BaseFragment() {
     companion object {
         fun newInstance() = GameoverFragment()
