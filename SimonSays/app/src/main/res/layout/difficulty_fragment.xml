@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/_difficulty_fragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/custom_background"
+    android:backgroundTint="#00E2FF"
+    android:backgroundTintMode="multiply">
 
     <Button
         android:id="@+id/_easy_mode_btn"
@@ -12,6 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:backgroundTint="#75E177"
+        android:fontFamily="@font/moonglade"
         android:text="@string/easy_mode"
         app:layout_constraintBottom_toTopOf="@+id/_medium_mode_btn"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,6 +27,7 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:backgroundTint="#FDEE6C"
+        android:fontFamily="@font/moonglade"
         android:text="@string/medium_mode"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,6 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:backgroundTint="#FF7A70"
+        android:fontFamily="@font/moonglade"
         android:text="@string/hard_mode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

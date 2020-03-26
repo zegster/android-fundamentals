@@ -67,6 +67,13 @@ class ScoreboardFragment : BaseFragment() {
         /* Called by RecyclerView to display the data at the specified position. */
         override fun onBindViewHolder(holder: ScoreboardViewHolder, position: Int) {
             holder.view._player_id_label.text = playerList[position].id.toString()
+            holder.view._player_difficulty.text = when(playerList[position].difficulty) {
+                0 -> "Easy"
+                1 -> "Medium"
+                2 -> "Hard"
+                else -> "Unknown"
+            }
+            holder.view._player_date_play.text = playerList[position].datePlay
             holder.view._player_score.text = playerList[position].score.toString()
         }
 

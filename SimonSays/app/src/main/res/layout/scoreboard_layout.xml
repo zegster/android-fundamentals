@@ -4,27 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="5dp"
-    android:layout_marginTop="2.5dp"
-    android:layout_marginEnd="5dp"
-    android:layout_marginBottom="2.5dp"
-    android:padding="10dp">
+    android:background="#FFFFFF"
+    android:paddingLeft="2dp"
+    android:paddingTop="5dp"
+    android:paddingRight="2dp"
+    android:paddingBottom="5dp">
 
-    <TextView
-        android:id="@+id/_player_id_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/player"
-        android:textColor="#000000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/_player_score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/score"
-        android:textColor="#000000"
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/_player_id_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/player"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/_player_difficulty"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/difficulty"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/_player_date_play"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/date_play"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/_player_score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/score"
+            android:textColor="#000000" />
+
+    </TableRow>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

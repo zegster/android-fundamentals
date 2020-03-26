@@ -5,7 +5,7 @@
     android:id="@+id/_game_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#969696"
+    android:background="#191919"
     tools:context=".ui.game.GameFragment">
 
     <TextView
@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/radio_space"
         android:text="@string/timer"
         android:textColor="#FFFFFF"
         android:textSize="36sp"
@@ -23,6 +24,10 @@
     <TableLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="#000000"
+        android:padding="1dp"
         app:layout_constraintBottom_toTopOf="@+id/_who_turn_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -82,7 +87,8 @@
         android:id="@+id/_who_turn_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/radio_space"
         android:text="@string/who_turn"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
@@ -92,10 +98,10 @@
 
     <TextView
         android:id="@+id/_current_score"
-        android:layout_width="80dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="#00FF00"
+        android:background="#0A0A0A"
+        android:fontFamily="@font/radio_space"
         android:text="@string/score"
         android:textAlignment="center"
         android:textColor="#FFFFFF"

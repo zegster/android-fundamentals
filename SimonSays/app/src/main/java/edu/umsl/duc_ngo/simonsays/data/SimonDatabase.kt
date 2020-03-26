@@ -6,7 +6,8 @@ import androidx.room.Database
 
 @Database(
     entities = [PlayerData::class],
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 abstract class SimonDatabase: RoomDatabase() {
     companion object {

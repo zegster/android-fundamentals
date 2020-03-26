@@ -22,6 +22,8 @@ import edu.umsl.duc_ngo.simonsays.ui.BaseFragment
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.game_fragment.*
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 private const val TAG = "GameFragment"
 class GameFragment : BaseFragment() {
@@ -132,7 +134,8 @@ class GameFragment : BaseFragment() {
                 _who_turn_label.setText(R.string.miss)
 
                 launch {
-                    val playerData = PlayerData(viewModel.getScore().value!!)
+                    val currentDate: String = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(Date())
+                    val playerData = PlayerData(viewModel.getScore().value!!, difficulty, currentDate)
                     context?.let {
                         SimonDatabase(it).getPlayerDataDao().addPlayer(playerData)
 

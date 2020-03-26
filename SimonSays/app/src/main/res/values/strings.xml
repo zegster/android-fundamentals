@@ -10,6 +10,10 @@
 
     <string name="player">Player</string>
     <string name="score">Score</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="date_play">Date Play</string>
+    <string name="empty_data">Empty</string>
+
     <string name="timer">Timer</string>
     <string name="who_turn">Who Turn</string>
     <string name="ready">Ready?</string>

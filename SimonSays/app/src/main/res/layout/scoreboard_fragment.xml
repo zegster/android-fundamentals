@@ -5,25 +5,99 @@
     android:id="@+id/_scoreboard_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="#FFFFFF"
+    android:backgroundTintMode="multiply"
     tools:context=".ui.scoreboard.ScoreboardFragment">
 
-    <TextView
-        android:id="@+id/_player_id_label"
-        android:layout_width="wrap_content"
+    <TableRow
+        android:id="@+id/tableRow"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/player"
-        android:textColor="#000000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/_player_score_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/high_score"
-        android:textColor="#000000"
+        android:background="#000000"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/_player_id_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/player"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/_player_difficulty_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/difficulty"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/_player_date_play_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/date_play"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/_player_score_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/high_score"
+            android:textColor="#FFFFFF" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="2dp"
+        android:paddingTop="5dp"
+        android:paddingRight="2dp"
+        android:paddingBottom="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableRow">
+
+        <TextView
+            android:id="@+id/_empty1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/empty_data"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/_empty2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/empty_data"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/_empty3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/empty_data"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/_empty4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/empty_data"
+            android:textColor="#000000" />
+
+    </TableRow>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/_scoreboard_rv"
@@ -32,6 +106,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/_player_id_label" />
+        app:layout_constraintTop_toBottomOf="@+id/tableRow">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
