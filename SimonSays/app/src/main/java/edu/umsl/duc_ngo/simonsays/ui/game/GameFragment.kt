@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -42,6 +43,10 @@ class GameFragment : BaseFragment() {
         }
     }
 
+    private var backgroundMusic: MediaPlayer? = null
+    private var mediaPlayer: MediaPlayer? = null
+    private var secondaryMediaPlayer: MediaPlayer? = null
+
     private lateinit var viewModel: GameViewModel
     private var animatorSet: AnimatorSet? = null
     private var delayHandler: Handler? = null
@@ -57,6 +62,22 @@ class GameFragment : BaseFragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        //Play background music
+        if(viewModel.getMusicCurrentTime() == 0) {
+            backgroundMusic = MediaPlayer.create(context, R.raw.wisp_x_switch)
+            backgroundMusic?.setVolume(0.25f, 0.25f)
+            backgroundMusic?.isLooping = true
+            viewModel.setMusicCurrentTime(backgroundMusic?.currentPosition)
+            backgroundMusic?.start()
+        }
+        else {
+            backgroundMusic = MediaPlayer.create(context, R.raw.wisp_x_switch)
+            backgroundMusic?.setVolume(0.25f, 0.25f)
+            backgroundMusic?.isLooping = true
+            backgroundMusic?.seekTo(viewModel.getMusicCurrentTime())
+            backgroundMusic?.start()
+        }
 
         //Only create a new sequence when the game haven't start yet
         val difficulty = intent.getIntExtra(DIFFICULTY, 0)
@@ -95,7 +116,9 @@ class GameFragment : BaseFragment() {
                             objectAnimator.startDelay = ( index * 100 ).toLong()
                             objectAnimator.duration = ( 1000 - (200 * difficulty) ).toLong()
                             objectAnimator.addListener(object : Animator.AnimatorListener {
-                                override fun onAnimationStart(animation: Animator?) {}
+                                override fun onAnimationStart(animation: Animator?) {
+                                    animateButtonSound()
+                                }
                                 override fun onAnimationEnd(animation: Animator?) {
                                     viewModel.updateSequenceLeft()
                                 }
@@ -115,6 +138,8 @@ class GameFragment : BaseFragment() {
                     //Create animation handler, turn on button when animation is done
                     animationHandler = Handler()
                     animationRunnable = Runnable {
+                        //Player Turn
+                        readySound()
                         enabledButton(true)
                         viewModel.resumeTime()
                         _who_turn_label.setText(R.string.player_turn)
@@ -130,6 +155,7 @@ class GameFragment : BaseFragment() {
             if(isGameOver == true && viewModel.isScoreRegister().value == false) {
                 viewModel.stopTime()
                 viewModel.gameFinish()
+                gameOverSound()
                 enabledButton(false)
                 _who_turn_label.setText(R.string.miss)
 
@@ -153,40 +179,82 @@ class GameFragment : BaseFragment() {
 
         //Update Timer
         viewModel.getTime().observe(viewLifecycleOwner, Observer {
+            countdownSound()
             _timer_label.text = it.toString()
         })
 
         //Red : 0, Yellow : 1, Green : 2, Blue : 3
         context?.let {
-            _red_btn.setOnClickListener {
-                viewModel.resetTime()
-                viewModel.checkSequence(0)
-            }
-
-            _yellow_btn.setOnClickListener {
-                viewModel.resetTime()
-                viewModel.checkSequence(1)
-            }
-
-            _green_btn.setOnClickListener {
-                viewModel.resetTime()
-                viewModel.checkSequence(2)
-            }
-
-            _blue_btn.setOnClickListener {
-                viewModel.resetTime()
-                viewModel.checkSequence(3)
-            }
+            buttonListener(_red_btn, 0)
+            buttonListener(_yellow_btn, 1)
+            buttonListener(_green_btn, 2)
+            buttonListener(_blue_btn, 3)
         }
     }
 
+    override fun onDetach() {
+        backgroundMusic?.release()
+        mediaPlayer?.release()
+        secondaryMediaPlayer?.release()
+        super.onDetach()
+    }
+
     override fun onDestroy() {
+        backgroundMusic?.pause()
+        viewModel.setMusicCurrentTime(backgroundMusic?.currentPosition)
+        backgroundMusic?.release()
+        mediaPlayer?.release()
+        secondaryMediaPlayer?.release()
+
         animatorSet?.pause()
         animatorSet?.removeAllListeners()
         animatorSet = null
         delayHandler?.removeCallbacks(delayRunnable)
         animationHandler?.removeCallbacks(animationRunnable)
         super.onDestroy()
+    }
+
+    private fun readySound() {
+        mediaPlayer?.release()
+        mediaPlayer = MediaPlayer.create(context, R.raw.ping)
+        mediaPlayer?.setVolume(1.0f, 1.0f)
+        mediaPlayer?.start()
+    }
+
+    private fun animateButtonSound() {
+        mediaPlayer?.release()
+        mediaPlayer = MediaPlayer.create(context, R.raw.hint_sound)
+        mediaPlayer?.setVolume(1.0f, 1.0f)
+        mediaPlayer?.start()
+    }
+
+    private fun countdownSound() {
+        secondaryMediaPlayer?.release()
+        secondaryMediaPlayer = MediaPlayer.create(context, R.raw.countdown_beep)
+        secondaryMediaPlayer?.setVolume(0.5f, 0.5f)
+        secondaryMediaPlayer?.start()
+    }
+
+    private fun buttonSound() {
+        mediaPlayer?.release()
+        mediaPlayer = MediaPlayer.create(context, R.raw.simple_button)
+        mediaPlayer?.setVolume(0.5f, 0.5f)
+        mediaPlayer?.start()
+    }
+
+    private fun gameOverSound() {
+        mediaPlayer?.release()
+        mediaPlayer = MediaPlayer.create(context, R.raw.warning_beep)
+        mediaPlayer?.setVolume(1.0f, 1.0f)
+        mediaPlayer?.start()
+    }
+
+    private fun buttonListener(view: View, color: Int) {
+        view.setOnClickListener {
+            buttonSound()
+            viewModel.resetTime()
+            viewModel.checkSequence(color)
+        }
     }
 
     private fun enabledButton(enable: Boolean) {

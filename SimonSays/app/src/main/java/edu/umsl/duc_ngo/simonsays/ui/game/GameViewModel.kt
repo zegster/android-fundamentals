@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class GameViewModel : ViewModel() {
+    private var musicCurrentTime: Int = 0
+
     private var currentScore = MutableLiveData<Int>()
     private var difficulty = MutableLiveData<Int>()
 
@@ -39,6 +41,15 @@ class GameViewModel : ViewModel() {
         isScoreRegister.value = false
     }
 
+    /* Music */
+    fun getMusicCurrentTime(): Int {
+        return musicCurrentTime
+    }
+
+    fun setMusicCurrentTime(millisecond: Int?) {
+        millisecond?.let { musicCurrentTime = it }
+    }
+
     /* Score */
     private fun incrementScore() {
         currentScore.value = currentScore.value?.plus(1)
@@ -66,8 +77,7 @@ class GameViewModel : ViewModel() {
             this.difficulty.value = difficulty
             generateRandomSequence(difficulty)
             isGameStarted.value = true
-            timeLeft.value = ( ((defaultTimeLeft - 1000 - (3000 * difficulty)) / 1000) % 60 ).toLong()
-            millisecondLeft = ( defaultTimeLeft - (3000 * difficulty) ).toLong()
+            initTime()
         }
     }
 
@@ -104,7 +114,7 @@ class GameViewModel : ViewModel() {
 
     private fun nextSequence() {
         resetIndex()
-        stopTime()
+        initTime()
         isFinishUpdate.value = false
         isGeneratingSequence.value = true
         generateRandomSequence(difficulty.value!!)
@@ -120,6 +130,21 @@ class GameViewModel : ViewModel() {
     /* Game */
     fun getTime(): LiveData<Long> {
         return timeLeft
+    }
+
+    private fun initTime() {
+        timer?.cancel()
+        timer = object : CountDownTimer(( defaultTimeLeft - (3000 * difficulty.value!!) ).toLong(), 1000) {
+            override fun onFinish() {
+                isGameOver.value = true
+            }
+            override fun onTick(millisUntilFinished: Long) {
+                timeLeft.value = (millisUntilFinished / 1000)
+                millisecondLeft = millisUntilFinished
+            }
+        }
+        timeLeft.value = ( ((defaultTimeLeft - 1000 - (3000 * difficulty.value!!)) / 1000) % 60 ).toLong()
+        millisecondLeft = ( defaultTimeLeft - (3000 * difficulty.value!!) ).toLong()
     }
 
     fun resumeTime() {
