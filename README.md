@@ -19,4 +19,5 @@
 
 #### Assignments:
 > - Simple Roll Call 
+> - Simon Says
 > - To Be Announced... 
