@@ -9,7 +9,7 @@ import androidx.room.Database
     version = 1,
     exportSchema = false
 )
-abstract class ShoppingDatabase: RoomDatabase()  {
+abstract class ShoppingDatabase : RoomDatabase()  {
     companion object {
         //Volatile: this instance is immediately available for all thread
         @Volatile private var instance : ShoppingDatabase? = null

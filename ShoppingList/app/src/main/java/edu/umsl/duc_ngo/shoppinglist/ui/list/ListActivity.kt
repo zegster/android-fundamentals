@@ -1,17 +1,17 @@
-package edu.umsl.duc_ngo.shoppinglist.ui.main
+package edu.umsl.duc_ngo.shoppinglist.ui.list
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import edu.umsl.duc_ngo.shoppinglist.R
 
-class MainActivity : AppCompatActivity() {
+class ListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+        setContentView(R.layout.list_activity)
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .add(R.id._main_activity, MainFragment.newInstance())
+                .add(R.id._list_activity, ListFragment.newInstance())
                 .commit()
         }
     }

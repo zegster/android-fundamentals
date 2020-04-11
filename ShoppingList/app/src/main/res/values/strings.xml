@@ -3,4 +3,11 @@
 
     <string name="all_list_label">All List</string>
     <string name="list_name_label">Untitled List</string>
+
+    <string name="list_dialog_title">Your List</string>
+    <string name="list_dialog_create_title">New List</string>
+    <string name="list_dialog_edit_title">Editing List</string>
+    <string name="list_dialog_name_hint">Enter a name</string>
+    <string name="list_dialog_submit_button">Submit</string>
+    <string name="list_dialog_cancel_button">Cancel</string>
 </resources>

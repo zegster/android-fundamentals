@@ -7,10 +7,10 @@
     android:layout_height="match_parent"
     android:backgroundTint="#FFFFFF"
     android:backgroundTintMode="multiply"
-    tools:context=".ui.main.MainFragment">
+    tools:context=".ui.list.ListFragment">
 
     <TableRow
-        android:id="@+id/table_row"
+        android:id="@+id/_list_tablerow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#000000"
@@ -49,6 +49,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/table_row" />
+        app:layout_constraintTop_toBottomOf="@+id/_list_tablerow" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

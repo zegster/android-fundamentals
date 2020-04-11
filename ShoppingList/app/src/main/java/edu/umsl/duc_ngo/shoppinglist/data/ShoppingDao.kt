@@ -17,8 +17,8 @@ interface ShoppingDao {
     @Insert
     suspend fun addList(shoppingList: ShoppingList)
 
-    @Query("SELECT * FROM ShoppingItem WHERE listId = :listId")
-    suspend fun getList(listId: Long): List<ShoppingItem>
+//    @Query("SELECT * FROM ShoppingList WHERE id = :listId")
+//    suspend fun getList(listId: Long): ShoppingList
 
     @Query("SELECT * FROM ShoppingList")
     suspend fun getLists(): List<ShoppingList>
