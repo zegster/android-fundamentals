@@ -86,7 +86,7 @@ class CreateItemDialogFragment : BaseDialogFragment() {
                         )
 
                         Toasty.info(lContext,"New Item Created", Toast.LENGTH_SHORT, true).show()
-                        viewModel.setItems(ShoppingDatabase(lContext).getShoppingDao().getItems(newItemListId))
+                        viewModel.setItems(ShoppingDatabase(lContext).getShoppingDao().getItem(newItemListId))
                         dismiss()
                     }
                 }

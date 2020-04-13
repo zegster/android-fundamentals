@@ -8,13 +8,19 @@ import androidx.room.Query
 interface ShoppingDao {
     /* Item */
     @Query("SELECT * FROM ShoppingItem WHERE listId = :listId")
-    suspend fun getItems(listId: Long): List<ShoppingItem>
+    suspend fun getItem(listId: Long): List<ShoppingItem>
+
+    @Query("SELECT * FROM ShoppingItem")
+    suspend fun getItems(): List<ShoppingItem>
 
     @Insert
     suspend fun addItem(shoppingItem: ShoppingItem)
 
     @Query("UPDATE ShoppingItem SET title = :itemName, quantity = :itemQuantity, price = :itemPrice WHERE id = :itemId")
     suspend fun updateItem(itemId: Long, itemName: String, itemQuantity: Int, itemPrice: Double)
+
+    @Query("UPDATE ShoppingItem SET isChecked = :itemIsChecked WHERE id = :itemId")
+    suspend fun markItem(itemId: Long, itemIsChecked: Boolean)
 
     @Query("DELETE FROM ShoppingItem WHERE id = :itemId")
     suspend fun removeItem(itemId: Long)

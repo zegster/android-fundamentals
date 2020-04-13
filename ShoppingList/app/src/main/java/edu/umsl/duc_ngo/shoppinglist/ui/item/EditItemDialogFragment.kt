@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import edu.umsl.duc_ngo.shoppinglist.R
 import edu.umsl.duc_ngo.shoppinglist.data.ShoppingDatabase
-import edu.umsl.duc_ngo.shoppinglist.data.ShoppingItem
 import edu.umsl.duc_ngo.shoppinglist.ui.BaseDialogFragment
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.item_dialog_fragment.view.*
@@ -87,7 +86,7 @@ class EditItemDialogFragment : BaseDialogFragment() {
                         )
 
                         Toasty.info(lContext,"New Item Created", Toast.LENGTH_SHORT, true).show()
-                        viewModel.setItems(ShoppingDatabase(lContext).getShoppingDao().getItems(currentItem.listId))
+                        viewModel.setItems(ShoppingDatabase(lContext).getShoppingDao().getItem(currentItem.listId))
                         dismiss()
                     }
                 }

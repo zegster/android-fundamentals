@@ -23,7 +23,7 @@
             style="@style/Custom.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:icon="@drawable/ic_chevron_left_black_24dp"
+            app:icon="@drawable/return_icon"
             app:iconTint="#03A9F4" />
 
         <TextView
@@ -31,7 +31,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:ellipsize="end"
             android:fontFamily="@font/madeleina_sans"
+            android:maxLines="1"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="@string/item_header_label"
@@ -43,7 +45,7 @@
             style="@style/Custom.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:icon="@drawable/ic_plus_black_24dp"
+            app:icon="@drawable/plus_icon"
             app:iconTint="#03A9F4" />
     </TableRow>
 
@@ -51,28 +53,44 @@
         android:id="@+id/_item_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/linear_layout"
+        app:layout_constraintBottom_toTopOf="@+id/price_table_row"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_table_row" />
+        app:layout_constraintTop_toBottomOf="@+id/item_table_row">
 
-    <LinearLayout
-        android:id="@+id/linear_layout"
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <TableRow
+        android:id="@+id/price_table_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#000000"
-        android:orientation="horizontal"
         android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:id="@+id/total_text_label"
-            android:layout_width="wrap_content"
+            android:id="@+id/_total_items_label"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="#03A9F4"
+            android:fontFamily="@font/madeleina_sans"
+            android:maxLines="1"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@string/item_total_item_label"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/total_text_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:fontFamily="@font/madeleina_sans"
             android:text="@string/item_total_text_label"
             android:textAlignment="center"
@@ -81,14 +99,13 @@
 
         <TextView
             android:id="@+id/_total_price_label"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="4"
             android:fontFamily="@font/madeleina_sans"
             android:text="@string/item_total_price_label"
             android:textColor="#FFFFFF"
             android:textSize="30sp" />
-
-    </LinearLayout>
+    </TableRow>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

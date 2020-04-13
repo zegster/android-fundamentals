@@ -8,8 +8,9 @@
     <string name="item_name_label">Untitled Item</string>
     <string name="item_quantity_label">Item Quantity</string>
     <string name="item_price_label">Item Price</string>
+    <string name="item_total_item_label">0</string>
     <string name="item_total_text_label">Total:</string>
-    <string name="item_total_price_label">$$$</string>
+    <string name="item_total_price_label">0.0</string>
 
     <string name="dialog_submit_button">Submit</string>
     <string name="dialog_cancel_button">Cancel</string>

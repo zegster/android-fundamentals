@@ -46,13 +46,7 @@ class ListFragment : BaseFragment() {
         _list_recycler_view.layoutManager = LinearLayoutManager(activity)
         _list_recycler_view.setHasFixedSize(true)
         _list_recycler_view.adapter = ListAdapter(listOf(ShoppingList(0, "Empty")))
-
-        /* Get List Data */
-        launch {
-            context?.let {
-                viewModel.setLists(ShoppingDatabase(it).getShoppingDao().getLists())
-            }
-        }
+        getPersistenceData()
 
         /* Create a new list */
         _create_list_button.setOnClickListener {
@@ -63,6 +57,32 @@ class ListFragment : BaseFragment() {
         viewModel.getLists().observe(viewLifecycleOwner, Observer {
             _list_recycler_view.adapter = ListAdapter(it)
         })
+
+        /* Monitor the current list data */
+        viewModel.getItems().observe(viewLifecycleOwner, Observer {
+            _list_recycler_view.adapter = ListAdapter(viewModel.getLists().value!!)
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getPersistenceData()
+    }
+
+    private fun getPersistenceData() {
+        /* Get Lists Data */
+        launch {
+            context?.let {
+                viewModel.setLists(ShoppingDatabase(it).getShoppingDao().getLists())
+            }
+        }
+
+        /* Get Items Data */
+        launch {
+            context?.let {
+                viewModel.setItems(ShoppingDatabase(it).getShoppingDao().getItems())
+            }
+        }
     }
 
     inner class ListAdapter(private val shoppingList: List<ShoppingList>): RecyclerView.Adapter<ListAdapter.ListHolder>() {
@@ -78,8 +98,9 @@ class ListFragment : BaseFragment() {
 
         /* Called by RecyclerView to display the data at the specified position. */
         override fun onBindViewHolder(holder: ListHolder, position: Int) {
-            /* Title Label */
+            /* List Label */
             holder.view._list_name_label.text = shoppingList[position].title
+            holder.view._list_total_item_label.text = viewModel.getTotalItem(shoppingList[position].id).toString()
 
             /* List Edit Button */
             holder.view._edit_list_button.setOnClickListener {

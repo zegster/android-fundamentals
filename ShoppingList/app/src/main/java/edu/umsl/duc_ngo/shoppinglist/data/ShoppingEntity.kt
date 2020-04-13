@@ -14,8 +14,9 @@ data class ShoppingList (
 )
 data class ShoppingItem (
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    @ColumnInfo val listId: Long,
+    @ColumnInfo(index = true) val listId: Long,
     @ColumnInfo var title: String,
     @ColumnInfo var quantity: Int,
-    @ColumnInfo var price: Double
+    @ColumnInfo var price: Double,
+    @ColumnInfo var isChecked: Boolean = false
 )

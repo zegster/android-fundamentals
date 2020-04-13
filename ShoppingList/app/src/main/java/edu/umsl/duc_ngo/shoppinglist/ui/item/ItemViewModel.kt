@@ -11,9 +11,13 @@ class ItemViewModel : ViewModel() {
     private var mCurrentItem = MutableLiveData<ShoppingItem>()
     private var mItems = mutableListOf<ShoppingItem>()
     private var mItemsLiveData = MutableLiveData<List<ShoppingItem>>()
+    private var mItemsLeft = MutableLiveData<Long>()
+    private var mTotalPrice = MutableLiveData<Double>()
 
     init {
         mItemsLiveData.value = mItems
+        mItemsLeft.value = 0L
+        mTotalPrice.value = 0.0
     }
 
     /* Shopping List */
@@ -37,9 +41,37 @@ class ItemViewModel : ViewModel() {
     fun setItems(items: List<ShoppingItem>) {
         mItems = items.toMutableList()
         mItemsLiveData.value = mItems
+        calculateItemLeft()
+        calculatePrice()
     }
 
     fun getItems(): LiveData<List<ShoppingItem>> {
         return mItemsLiveData
+    }
+
+    fun getItemsLeft(): LiveData<Long> {
+        return mItemsLeft
+    }
+
+    fun getTotalPrice(): LiveData<Double> {
+        return mTotalPrice
+    }
+
+    private fun calculateItemLeft() {
+        var itemLeft = 0L
+        for(i in mItems) {
+            if(!i.isChecked) {
+                itemLeft++
+            }
+        }
+        mItemsLeft.value = itemLeft
+    }
+
+    private fun calculatePrice() {
+        var total = 0.0
+        for(i in mItems) {
+            total += i.price * i.quantity.toDouble()
+        }
+        mTotalPrice.value = total
     }
 }

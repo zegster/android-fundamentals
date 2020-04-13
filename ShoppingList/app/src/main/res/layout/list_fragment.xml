@@ -37,7 +37,7 @@
             style="@style/Custom.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:icon="@drawable/ic_plus_black_24dp"
+            app:icon="@drawable/plus_icon"
             app:iconTint="#03A9F4" />
     </TableRow>
 
