@@ -1,6 +1,7 @@
 package edu.umsl.duc_ngo.shoppinglist.ui.list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,17 +14,19 @@ import edu.umsl.duc_ngo.shoppinglist.R
 import edu.umsl.duc_ngo.shoppinglist.data.ShoppingDatabase
 import edu.umsl.duc_ngo.shoppinglist.data.ShoppingList
 import edu.umsl.duc_ngo.shoppinglist.ui.BaseFragment
+import edu.umsl.duc_ngo.shoppinglist.ui.item.ItemFragment
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.list_fragment.*
 import kotlinx.android.synthetic.main.list_row_layout.view.*
 import kotlinx.coroutines.launch
 
-private const val TAG = "Main"
+private const val TAG = "List"
 class ListFragment : BaseFragment() {
     companion object {
         fun newInstance() = ListFragment()
     }
 
+    /* Global Attributes */
     private lateinit var viewModel: ListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,9 +43,9 @@ class ListFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         /* Configure Recycle View */
-        _shoppinglist_recycleview.layoutManager = LinearLayoutManager(activity)
-        _shoppinglist_recycleview.setHasFixedSize(true)
-        _shoppinglist_recycleview.adapter = ShoppingListAdapter(listOf(ShoppingList(0, "Empty")))
+        _list_recycler_view.layoutManager = LinearLayoutManager(activity)
+        _list_recycler_view.setHasFixedSize(true)
+        _list_recycler_view.adapter = ListAdapter(listOf(ShoppingList(0, "Empty")))
 
         /* Get List Data */
         launch {
@@ -58,14 +61,14 @@ class ListFragment : BaseFragment() {
 
         /* Monitor the current list data */
         viewModel.getLists().observe(viewLifecycleOwner, Observer {
-            _shoppinglist_recycleview.adapter = ShoppingListAdapter(it)
+            _list_recycler_view.adapter = ListAdapter(it)
         })
     }
 
-    inner class ShoppingListAdapter(private val shoppingList: List<ShoppingList>): RecyclerView.Adapter<ShoppingListAdapter.ShoppingListHolder>() {
+    inner class ListAdapter(private val shoppingList: List<ShoppingList>): RecyclerView.Adapter<ListAdapter.ListHolder>() {
         /* Called when RecyclerView needs a new ViewHolder of the given type to represent an item. */
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingListHolder {
-            return ShoppingListHolder(
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListHolder {
+            return ListHolder(
                 LayoutInflater.from(parent.context).inflate(R.layout.list_row_layout, parent, false)
             )
         }
@@ -74,32 +77,36 @@ class ListFragment : BaseFragment() {
         override fun getItemCount() = shoppingList.size
 
         /* Called by RecyclerView to display the data at the specified position. */
-        override fun onBindViewHolder(holder: ShoppingListHolder, position: Int) {
+        override fun onBindViewHolder(holder: ListHolder, position: Int) {
+            /* Title Label */
             holder.view._list_name_label.text = shoppingList[position].title
 
+            /* List Edit Button */
             holder.view._edit_list_button.setOnClickListener {
                 viewModel.setCurrentList(shoppingList[position])
                 EditListDialogFragment.newInstance().show(parentFragmentManager, "EditListDialog")
             }
 
+            /* List Delete Button */
             holder.view._delete_list_button.setOnClickListener {
                 launch {
                     context?.let {
                         ShoppingDatabase(it).getShoppingDao().removeList(shoppingList[position].id)
-                        Toasty.info(it,"Entry #${shoppingList[position].id} Deleted", Toast.LENGTH_SHORT, true).show()
+                        Toasty.info(it,"[${shoppingList[position].title}] Deleted", Toast.LENGTH_SHORT, true).show()
                         viewModel.setLists(ShoppingDatabase(it).getShoppingDao().getLists())
                     }
                 }
+                Log.d(TAG, "Delete List ID: ${shoppingList[position].id}")
             }
 
-            holder.view._list_tablerow.setOnClickListener {
-                context?.let {
-                    Toasty.info(it,"Testing " + shoppingList[position].id, Toast.LENGTH_SHORT, true).show()
-                }
+            /* List Body */
+            holder.view._list_table_row.setOnClickListener {
+                val intent = ItemFragment.newIntentInit(activity, shoppingList[position].id)
+                startActivity(intent)
             }
         }
 
         /* Describes an item view and metadata about its place within the RecyclerView. */
-        inner class ShoppingListHolder(val view: View): RecyclerView.ViewHolder(view)
+        inner class ListHolder(val view: View): RecyclerView.ViewHolder(view)
     }
 }

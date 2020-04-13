@@ -10,7 +10,7 @@
     tools:context=".ui.list.ListFragment">
 
     <TableRow
-        android:id="@+id/_list_tablerow"
+        android:id="@+id/_list_table_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#000000"
@@ -28,7 +28,7 @@
             android:fontFamily="@font/madeleina_sans"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="@string/all_list_label"
+            android:text="@string/list_header_label"
             android:textColor="#FFFFFF"
             android:textSize="24sp" />
 
@@ -42,13 +42,13 @@
     </TableRow>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/_shoppinglist_recycleview"
+        android:id="@+id/_list_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/_list_tablerow" />
+        app:layout_constraintTop_toBottomOf="@+id/_list_table_row" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

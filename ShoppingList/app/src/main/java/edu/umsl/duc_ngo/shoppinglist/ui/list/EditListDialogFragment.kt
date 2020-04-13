@@ -16,7 +16,7 @@ import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.list_dialog_fragment.view.*
 import kotlinx.coroutines.launch
 
-private const val TAG = "EditShoppingList"
+private const val TAG = "EditList"
 class EditListDialogFragment : BaseDialogFragment() {
     companion object {
         fun newInstance() = EditListDialogFragment()
@@ -53,7 +53,7 @@ class EditListDialogFragment : BaseDialogFragment() {
             mDialogView._list_title_label.text = getString(R.string.list_dialog_edit_title)
 
             /* Dialog Input: list name */
-            mDialogView._list_name_edittext.setText(currentList.title)
+            mDialogView._list_name_edit_text.setText(currentList.title)
 
             /* Dialog Cancellation */
             mDialogView._list_cancel_button.setOnClickListener {
@@ -63,12 +63,12 @@ class EditListDialogFragment : BaseDialogFragment() {
             /* Dialog Submission */
             mDialogView._list_submit_button.setOnClickListener {
                 launch {
-                    context?.let {lContext ->
-                        val newListName = when(mDialogView._list_name_edittext.text.toString().isBlank()) {
+                    context?.let { lContext ->
+                        val editListName = when(mDialogView._list_name_edit_text.text.toString().isBlank()) {
                             true -> "Untitled List"
-                            false -> mDialogView._list_name_edittext.text.toString()
+                            false -> mDialogView._list_name_edit_text.text.toString()
                         }
-                        ShoppingDatabase(lContext).getShoppingDao().updateList(currentList.id, newListName)
+                        ShoppingDatabase(lContext).getShoppingDao().updateList(currentList.id, editListName)
 
                         Toasty.info(lContext,"List Updated", Toast.LENGTH_SHORT, true).show()
                         viewModel.setLists(ShoppingDatabase(lContext).getShoppingDao().getLists())

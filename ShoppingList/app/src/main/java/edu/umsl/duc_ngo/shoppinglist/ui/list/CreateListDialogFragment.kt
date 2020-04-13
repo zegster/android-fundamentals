@@ -17,7 +17,7 @@ import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.list_dialog_fragment.view.*
 import kotlinx.coroutines.launch
 
-private const val TAG = "CreateShoppingList"
+private const val TAG = "CreateList"
 class CreateListDialogFragment : BaseDialogFragment() {
     companion object {
         fun newInstance() = CreateListDialogFragment()
@@ -58,10 +58,10 @@ class CreateListDialogFragment : BaseDialogFragment() {
             /* Dialog Submission */
             mDialogView._list_submit_button.setOnClickListener {
                 launch {
-                    context?.let {lContext ->
-                        val newListName = when(mDialogView._list_name_edittext.text.toString().isBlank()) {
+                    context?.let { lContext ->
+                        val newListName = when(mDialogView._list_name_edit_text.text.toString().isBlank()) {
                             true -> "Untitled List"
-                            false -> mDialogView._list_name_edittext.text.toString()
+                            false -> mDialogView._list_name_edit_text.text.toString()
                         }
 
                         val newList = ShoppingList(title = newListName)

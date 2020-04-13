@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/_list_title_label"
+        android:id="@+id/_item_title_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#000000"
@@ -21,35 +21,67 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/_list_name_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:autofillHints="@string/list_dialog_name_hint"
-        android:ems="10"
-        android:fontFamily="@font/madeleina_sans"
-        android:hint="@string/list_dialog_name_hint"
-        android:inputType="textPersonName"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/_list_title_label" />
-
     <LinearLayout
         android:id="@+id/edit_text_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/_item_title_label">
+
+        <EditText
+            android:id="@+id/_item_name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/list_dialog_name_hint"
+            android:ems="10"
+            android:fontFamily="@font/madeleina_sans"
+            android:hint="@string/item_dialog_name_hint"
+            android:inputType="textPersonName"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/_item_quantity_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/list_dialog_name_hint"
+            android:ems="10"
+            android:fontFamily="@font/madeleina_sans"
+            android:hint="@string/item_dialog_quantity_hint"
+            android:inputType="number"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/_item_price_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/list_dialog_name_hint"
+            android:ems="10"
+            android:fontFamily="@font/madeleina_sans"
+            android:hint="@string/item_dialog_price_hint"
+            android:inputType="number|numberDecimal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/_list_name_edit_text">
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_linear_layout">
 
         <Button
-            android:id="@+id/_list_cancel_button"
+            android:id="@+id/_item_cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -61,7 +93,7 @@
             tools:ignore="ButtonStyle" />
 
         <Button
-            android:id="@+id/_list_submit_button"
+            android:id="@+id/_item_submit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
