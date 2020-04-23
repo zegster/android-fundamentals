@@ -85,7 +85,7 @@ class EditItemDialogFragment : BaseDialogFragment() {
                             currentItem.id, editItemName, editItemQuantity, editItemPrice
                         )
 
-                        Toasty.info(lContext,"New Item Created", Toast.LENGTH_SHORT, true).show()
+                        Toasty.info(lContext,"Item Updated", Toast.LENGTH_SHORT, true).show()
                         viewModel.setItems(ShoppingDatabase(lContext).getShoppingDao().getItem(currentItem.listId))
                         dismiss()
                     }
