@@ -17,7 +17,7 @@ abstract class ShoppingDatabase : RoomDatabase()  {
 
         //Return an instance if not null. Else build our database
         //Once database is build, assign it to our instance
-        //Invoke function will automatically call when SimonDatabase() is call.
+        //Invoke function will automatically call when Database() is call.
         operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {
             instance ?: buildDatabase(context).also { instance = it }
         }
