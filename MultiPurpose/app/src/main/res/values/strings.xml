@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">Multi Purpose</string>
+
+    <!-- Application Name -->
+    <string name="note_application">Note</string>
+    <string name="weather_application">Weather</string>
+    <string name="chronometer_application">Chronometer</string>
+    <string name="counter_application">Counter</string>
+    <string name="alarm_application">Alarm</string>
+    <string name="reminder_application">Reminder</string>
+
+    <!-- Dialog -->
+    <string name="dialog_cancel_button">Cancel</string>
+    <string name="dialog_submit_button">Submit</string>
+
+    <!-- Note Application -->
+    <string name="note_header">All Note</string>
+    <string name="note_title">Untitled Note</string>
+    <string name="note_total_item">0</string>
+    <string name="note_list_dialog_header">New Note</string>
+    <string name="note_list_dialog_title_hint">Enter a title</string>
 </resources>

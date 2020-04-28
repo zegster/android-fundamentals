@@ -19,6 +19,9 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:launchMode="singleTop"
+            android:name=".ui.note.NoteActivity">
+        </activity>
     </application>
-
 </manifest>

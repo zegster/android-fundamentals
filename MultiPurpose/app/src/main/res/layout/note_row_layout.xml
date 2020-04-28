@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraint_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:paddingLeft="10dp"
+    android:paddingTop="5dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="5dp">
+
+    <TableRow
+        android:id="@+id/_note_table_row"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/custom_note_row"
+        android:backgroundTintMode="multiply"
+        android:gravity="center_vertical"
+        android:padding="6dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/_note_title_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="4"
+            android:ellipsize="end"
+            android:fontFamily="@font/madeleina_sans"
+            android:maxLines="1"
+            android:text="@string/note_title"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/_note_total_item_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/madeleina_sans"
+            android:text="@string/note_total_item"
+            android:textAlignment="center"
+            android:textColor="#001CD4"
+            android:textSize="30sp" />
+
+        <ImageButton
+            android:id="@+id/_edit_note_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00FFFFFF"
+            android:src="@drawable/edit_icon"
+            android:tint="#4CAF50"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
+            android:id="@+id/_delete_note_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00FFFFFF"
+            android:src="@drawable/delete_icon"
+            android:tint="#FF0000"
+            tools:ignore="ContentDescription" />
+    </TableRow>
+</androidx.constraintlayout.widget.ConstraintLayout>
