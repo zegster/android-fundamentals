@@ -23,8 +23,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-private const val TAG = "EditNote"
-
 class EditNoteListDialogFragment : BaseDialogFragment() {
     companion object {
         fun newInstance() = EditNoteListDialogFragment()
@@ -73,12 +71,12 @@ class EditNoteListDialogFragment : BaseDialogFragment() {
             )
 
             /* Dialog Cancellation */
-            mDialogView._note_list_cancel_button.setOnClickListener {
+            mDialogView._note_dialog_cancel_button.setOnClickListener {
                 dismiss()
             }
 
             /* Dialog Submission */
-            mDialogView._note_list_submit_button.setOnClickListener {
+            mDialogView._note_dialog_submit_button.setOnClickListener {
                 launch {
                     context?.let { lContext ->
                         /* Get title */

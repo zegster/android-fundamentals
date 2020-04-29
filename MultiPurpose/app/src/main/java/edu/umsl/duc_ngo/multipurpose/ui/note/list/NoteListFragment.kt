@@ -22,12 +22,11 @@ import edu.umsl.duc_ngo.multipurpose.R
 import edu.umsl.duc_ngo.multipurpose.data.note.NoteDatabase
 import edu.umsl.duc_ngo.multipurpose.data.note.NoteList
 import edu.umsl.duc_ngo.multipurpose.ui.BaseFragment
+import edu.umsl.duc_ngo.multipurpose.ui.note.item.NoteItemFragment
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.note_list_fragment.*
 import kotlinx.android.synthetic.main.note_list_row_layout.view.*
 import kotlinx.coroutines.launch
-
-private const val TAG = "Note"
 
 class NoteListFragment : BaseFragment() {
     companion object {
@@ -63,7 +62,7 @@ class NoteListFragment : BaseFragment() {
         _note_recycler_view.layoutManager = LinearLayoutManager(activity)
         _note_recycler_view.setHasFixedSize(true)
         _note_recycler_view.adapter = ListAdapter(listOf(NoteList(0, "", "", "")))
-        val categories = resources.getStringArray(R.array.note_categories)
+        val categories = resources.getStringArray(R.array.note_list_categories)
         val spinnerAdapter = ArrayAdapter(context!!, R.layout.note_list_categories_spinner, categories)
         _note_categories_spinner.adapter = spinnerAdapter
         getPersistenceData()
@@ -88,7 +87,7 @@ class NoteListFragment : BaseFragment() {
         }
 
         /* Create a new list */
-        _create_note_button.setOnClickListener {
+        _note_create_button.setOnClickListener {
             CreateNoteListDialogFragment.newInstance().show(parentFragmentManager, "CreateNoteDialog")
         }
 
@@ -127,8 +126,7 @@ class NoteListFragment : BaseFragment() {
         }
     }
 
-    inner class ListAdapter(private val noteList: List<NoteList>) :
-        RecyclerView.Adapter<ListAdapter.ListHolder>() {
+    inner class ListAdapter(private val noteList: List<NoteList>) : RecyclerView.Adapter<ListAdapter.ListHolder>() {
         /* Called when RecyclerView needs a new ViewHolder of the given type to represent an item. */
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListHolder {
             return ListHolder(
@@ -147,13 +145,13 @@ class NoteListFragment : BaseFragment() {
             holder.view._note_total_item_label.text = listViewModel.getTotalItem(noteList[position].id).toString()
 
             /* Edit Button */
-            holder.view._edit_note_button.setOnClickListener {
+            holder.view._note_edit_button.setOnClickListener {
                 listViewModel.setCurrentList(noteList[position])
-                EditNoteListDialogFragment.newInstance().show(parentFragmentManager, "EditListDialog")
+                EditNoteListDialogFragment.newInstance().show(parentFragmentManager, "EditNoteDialog")
             }
 
             /* Delete Button */
-            holder.view._delete_note_button.setOnClickListener {
+            holder.view._note_delete_button.setOnClickListener {
                 launch {
                     context?.let {
                         NoteDatabase(it).getNoteDao().removeList(noteList[position].id)
@@ -174,8 +172,8 @@ class NoteListFragment : BaseFragment() {
             DrawableCompat.setTint(drawable, parseColor(colorLabel))
             holder.view._note_table_row.background = drawable
             holder.view._note_table_row.setOnClickListener {
-//                val intent = ItemFragment.newIntentInit(activity, shoppingList[position].id)
-//                startActivity(intent)
+                val intent = NoteItemFragment.newIntentInit(activity, noteList[position].id)
+                startActivity(intent)
             }
         }
 

@@ -10,18 +10,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!-- Main Menu -->
         <activity
-            android:launchMode="singleTop"
-            android:name=".ui.main.MainActivity">
+            android:name=".ui.main.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <!-- Note Application -->
         <activity
-            android:launchMode="singleTop"
-            android:name=".ui.note.list.NoteListActivity">
-        </activity>
+            android:name=".ui.note.list.NoteListActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.note.item.NoteItemActivity"
+            android:launchMode="singleTop" />
     </application>
 </manifest>

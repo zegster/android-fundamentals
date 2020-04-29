@@ -15,8 +15,8 @@
 
     <!-- Note Application -->
     <!-- NOTE: string array must match with viewModel utility function -->
-    <string name="note_header">All Note</string>
-    <string-array name="note_categories">
+    <string name="note_list_header">All Note</string>
+    <string-array name="note_list_categories">
         <item>Default</item>
         <item>Name - ASC</item>
         <item>Name - DESC</item>
@@ -25,8 +25,8 @@
         <item>Color - ASC</item>
         <item>Color - DESC</item>
     </string-array>
-    <string name="note_title">Untitled Note</string>
-    <string name="note_total_item">0</string>
+    <string name="note_list_title">Untitled Note</string>
+    <string name="note_list_total_item">0</string>
     <string name="note_list_dialog_new_header">New Note</string>
     <string name="note_list_dialog_edit_header">Edit Note</string>
     <string name="note_list_dialog_title_hint">Enter a title</string>
@@ -40,4 +40,6 @@
         <item>Green</item>
         <item>Yellow</item>
     </string-array>
+    <string name="note_item_header">All Page</string>
+    <string name="note_item_dialog_new_header">New Page</string>
 </resources>

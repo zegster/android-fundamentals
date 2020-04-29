@@ -54,17 +54,6 @@
                 android:textSize="16sp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/_note_total_item_label"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="@font/madeleina_sans"
-            android:text="@string/note_list_total_item"
-            android:textAlignment="center"
-            android:textColor="#001CD4"
-            android:textSize="30sp" />
-
         <ImageButton
             android:id="@+id/_note_edit_button"
             android:layout_width="wrap_content"
