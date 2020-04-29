@@ -3,6 +3,8 @@ package edu.umsl.duc_ngo.multipurpose.data.note
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.sqlite.db.SupportSQLiteQuery
 
 @Dao
 interface NoteDao {
@@ -10,8 +12,9 @@ interface NoteDao {
     @Query("SELECT * FROM NoteList WHERE id = :id")
     suspend fun getList(id: Long): NoteList
 
-    @Query("SELECT * FROM NoteList")
-    suspend fun getLists(): List<NoteList>
+    //@Query("SELECT * FROM NoteList")
+    @RawQuery
+    suspend fun getLists(query: SupportSQLiteQuery): List<NoteList>
 
     @Insert
     suspend fun addList(NoteList: NoteList)

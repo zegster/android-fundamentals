@@ -21,7 +21,7 @@
 
         <activity
             android:launchMode="singleTop"
-            android:name=".ui.note.NoteActivity">
+            android:name=".ui.note.list.NoteListActivity">
         </activity>
     </application>
 </manifest>

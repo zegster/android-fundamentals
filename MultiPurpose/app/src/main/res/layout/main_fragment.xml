@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/custom_background"
-    android:backgroundTint="#03A9F4"
+    android:backgroundTint="#1C1C1C"
     android:backgroundTintMode="multiply">
 
     <TableLayout

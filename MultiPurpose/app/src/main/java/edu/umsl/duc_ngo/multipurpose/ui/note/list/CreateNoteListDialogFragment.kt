@@ -1,4 +1,4 @@
-package edu.umsl.duc_ngo.multipurpose.ui.note
+package edu.umsl.duc_ngo.multipurpose.ui.note.list
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -12,12 +12,13 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
+import androidx.sqlite.db.SimpleSQLiteQuery
 import edu.umsl.duc_ngo.multipurpose.R
 import edu.umsl.duc_ngo.multipurpose.data.note.NoteDatabase
 import edu.umsl.duc_ngo.multipurpose.data.note.NoteList
 import edu.umsl.duc_ngo.multipurpose.ui.BaseDialogFragment
 import es.dmoral.toasty.Toasty
-import kotlinx.android.synthetic.main.note_dialog_fragment.view.*
+import kotlinx.android.synthetic.main.note_list_dialog_fragment.view.*
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -25,26 +26,22 @@ import java.time.format.FormatStyle
 
 private const val TAG = "CreateNote"
 
-class CreateNoteDialogFragment : BaseDialogFragment() {
+class CreateNoteListDialogFragment : BaseDialogFragment() {
     companion object {
-        fun newInstance() = CreateNoteDialogFragment()
+        fun newInstance() = CreateNoteListDialogFragment()
     }
 
-    private lateinit var viewModel: NoteViewModel
+    private lateinit var listViewModel: NoteListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = activity?.let {
-            ViewModelProvider(it).get(NoteViewModel::class.java)
+        listViewModel = activity?.let {
+            ViewModelProvider(it).get(NoteListViewModel::class.java)
         }!!
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.note_dialog_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        return inflater.inflate(R.layout.note_list_dialog_fragment, container, false)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -56,14 +53,15 @@ class CreateNoteDialogFragment : BaseDialogFragment() {
             /* Dialog Configuration */
             /* Inflate and set the layout for the dialog
             NOTE: Pass null as the parent view because its going in the dialog layout. IDE will complain, but it's fine. */
-            val mDialogView =
-                requireActivity().layoutInflater.inflate(R.layout.note_dialog_fragment, null)
+            val mDialogView = requireActivity().layoutInflater.inflate(R.layout.note_list_dialog_fragment, null)
             val mBuilder = AlertDialog.Builder(it).setView(mDialogView)
 
-            /* Setup colors label spinner */
-            val colorLabels = arrayOf("Default", "Orange", "Yellow", "Green", "Blue")
-            val spinnerAdapter =
-                ArrayAdapter(context!!, android.R.layout.simple_spinner_item, colorLabels)
+            /* Dialog Header */
+            mDialogView._note_dialog_header.text = getString(R.string.note_list_dialog_new_header)
+
+            /* Dialog Input: colorLabel (spinner) */
+            val colorLabels = resources.getStringArray(R.array.note_list_dialog_colors_label)
+            val spinnerAdapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_dropdown_item, colorLabels)
             mDialogView._note_colors_label_spinner.adapter = spinnerAdapter
 
             /* Dialog Cancellation */
@@ -75,12 +73,11 @@ class CreateNoteDialogFragment : BaseDialogFragment() {
             mDialogView._note_list_submit_button.setOnClickListener {
                 launch {
                     context?.let { lContext ->
-                        /* Get note title */
-                        val newNoteTitle =
-                            when (mDialogView._note_title_edit_text.text.toString().isBlank()) {
-                                true -> "Untitled List"
-                                false -> mDialogView._note_title_edit_text.text.toString()
-                            }
+                        /* Get title */
+                        val newNoteTitle = when (mDialogView._note_title_edit_text.text.toString().isBlank()) {
+                            true -> "Untitled List"
+                            false -> mDialogView._note_title_edit_text.text.toString()
+                        }
 
                         /* Get current local date time */
                         val currentTime = LocalDateTime.now()
@@ -93,9 +90,14 @@ class CreateNoteDialogFragment : BaseDialogFragment() {
                         /* Write to database */
                         val newList = NoteList(title = newNoteTitle, timestamp = formatted, colorLabel = newNoteColorLabel)
                         NoteDatabase(lContext).getNoteDao().addList(newList)
-
                         Toasty.info(lContext, "New Note Created", Toast.LENGTH_SHORT, true).show()
-                        viewModel.setLists(NoteDatabase(lContext).getNoteDao().getLists())
+
+                        /* Update listViewModel */
+                        val category = listViewModel.getCurrentCategory()
+                        listViewModel.setLists(
+                            NoteDatabase(lContext).getNoteDao()
+                                .getLists(SimpleSQLiteQuery("SELECT * FROM NoteList ORDER BY $category"))
+                        )
                         dismiss()
                     }
                 }

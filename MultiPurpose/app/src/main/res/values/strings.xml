@@ -14,9 +14,30 @@
     <string name="dialog_submit_button">Submit</string>
 
     <!-- Note Application -->
+    <!-- NOTE: string array must match with viewModel utility function -->
     <string name="note_header">All Note</string>
+    <string-array name="note_categories">
+        <item>Default</item>
+        <item>Name - ASC</item>
+        <item>Name - DESC</item>
+        <item>Last Updated - ASC</item>
+        <item>Last Updated - DESC</item>
+        <item>Color - ASC</item>
+        <item>Color - DESC</item>
+    </string-array>
     <string name="note_title">Untitled Note</string>
     <string name="note_total_item">0</string>
-    <string name="note_list_dialog_header">New Note</string>
+    <string name="note_list_dialog_new_header">New Note</string>
+    <string name="note_list_dialog_edit_header">Edit Note</string>
     <string name="note_list_dialog_title_hint">Enter a title</string>
+    <string name="note_list_color_label">Color Label:</string>
+    <string-array name="note_list_dialog_colors_label">
+        <item>Default</item>
+        <item>Orange</item>
+        <item>Red</item>
+        <item>Violet</item>
+        <item>Blue</item>
+        <item>Green</item>
+        <item>Yellow</item>
+    </string-array>
 </resources>

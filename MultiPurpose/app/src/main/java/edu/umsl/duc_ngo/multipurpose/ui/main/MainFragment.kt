@@ -1,16 +1,18 @@
 package edu.umsl.duc_ngo.multipurpose.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import edu.umsl.duc_ngo.multipurpose.R
 import edu.umsl.duc_ngo.multipurpose.ui.BaseFragment
-import edu.umsl.duc_ngo.multipurpose.ui.note.NoteFragment
+import edu.umsl.duc_ngo.multipurpose.ui.note.list.NoteListFragment
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.main_fragment.*
 
 private const val TAG = "Main"
+
 class MainFragment : BaseFragment() {
     companion object {
         fun newInstance() = MainFragment()
@@ -29,7 +31,7 @@ class MainFragment : BaseFragment() {
 
         /* Starting the note application */
         _note_app_button.setOnClickListener {
-            val intent = NoteFragment.newIntentInit(activity)
+            val intent = NoteListFragment.newIntentInit(activity)
             startActivity(intent)
         }
 
@@ -50,40 +52,12 @@ class MainFragment : BaseFragment() {
 
         /* Starting the alarm application */
         _alarm_app_button.setOnClickListener {
-
+            Toasty.info(context!!, "Work In Progress", Toast.LENGTH_SHORT, true).show()
         }
 
         /* Starting the reminder application */
         _reminder_app_button.setOnClickListener {
-
+            Toasty.info(context!!, "Work In Progress", Toast.LENGTH_SHORT, true).show()
         }
-
-//        /* Starting the GameActivity */
-//        _start_game_btn.setOnClickListener {
-//            playStartSound()
-//            parentFragmentManager.beginTransaction()
-//                .replace(R.id._main_activity, DifficultyFragment.newInstance())
-//                .addToBackStack(null)
-//                .commit()
-//        }
-//
-//        /* View scoreboard screen */
-//        _high_score_btn.setOnClickListener {
-//            playStartSound()
-//            val intent = ScoreboardFragment.newIntentInit(activity)
-//            startActivity(intent)
-//        }
-//
-//        /* Exit Game */
-//        _quit_game_btn.setOnClickListener {
-//            _start_game_btn.isEnabled = false
-//            _high_score_btn.isEnabled = false
-//            playStartSound()
-//            context?.let {
-//                Toasty.info(it,"See You Next Time", Toast.LENGTH_SHORT, false).show();
-//            }
-//            Handler().postDelayed({exitProcess(0)}, 2000)
-//        }
-
     }
 }
