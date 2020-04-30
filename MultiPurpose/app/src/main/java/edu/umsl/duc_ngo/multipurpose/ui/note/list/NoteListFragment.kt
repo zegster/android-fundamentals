@@ -67,6 +67,11 @@ class NoteListFragment : BaseFragment() {
         _note_categories_spinner.adapter = spinnerAdapter
         getPersistenceData()
 
+        /* Go back to previous activity */
+        _note_return_button.setOnClickListener {
+            activity?.onBackPressed()
+        }
+
         /* Sort by spinner */
         _note_categories_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

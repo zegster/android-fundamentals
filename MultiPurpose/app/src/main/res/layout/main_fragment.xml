@@ -213,5 +213,4 @@
             </LinearLayout>
         </TableRow>
     </TableLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

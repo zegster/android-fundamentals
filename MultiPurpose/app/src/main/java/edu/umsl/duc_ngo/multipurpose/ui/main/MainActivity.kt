@@ -1,7 +1,7 @@
 package edu.umsl.duc_ngo.multipurpose.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import edu.umsl.duc_ngo.multipurpose.R
 
 class MainActivity : AppCompatActivity() {

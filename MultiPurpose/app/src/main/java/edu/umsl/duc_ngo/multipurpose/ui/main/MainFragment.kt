@@ -11,8 +11,6 @@ import edu.umsl.duc_ngo.multipurpose.ui.note.list.NoteListFragment
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.main_fragment.*
 
-private const val TAG = "Main"
-
 class MainFragment : BaseFragment() {
     companion object {
         fun newInstance() = MainFragment()

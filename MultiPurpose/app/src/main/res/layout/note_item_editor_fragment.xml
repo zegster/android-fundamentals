@@ -3,9 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:backgroundTint="#FFFFFF"
-    android:backgroundTintMode="multiply">
+    android:layout_height="match_parent">
 
     <TableRow
         android:id="@+id/table_row"
@@ -17,15 +15,15 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/_note_return_button"
+            android:id="@+id/_note_editor_return_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#00BCD4"
+            android:backgroundTint="#FF6464"
             android:src="@drawable/return_icon"
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/_note_label"
+            android:id="@+id/_note_editor_header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -35,26 +33,55 @@
             android:maxLines="1"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="@string/note_item_header"
+            android:text="@string/note_list_dialog_new_header"
             android:textColor="#FFFFFF"
             android:textSize="24sp" />
 
         <ImageButton
-            android:id="@+id/_note_create_button"
+            android:id="@+id/_note_editor_submit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#00BCD4"
-            android:src="@drawable/plus_icon"
+            android:backgroundTint="#64FF6B"
+            android:src="@drawable/check_icon"
             tools:ignore="ContentDescription" />
     </TableRow>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/_note_recycler_view"
+    <EditText
+        android:id="@+id/_note_title_edit_text"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="@string/note_list_dialog_title_hint"
+        android:ems="10"
+        android:fontFamily="@font/madeleina_sans"
+        android:hint="@string/note_list_dialog_title_hint"
+        android:inputType="textPersonName"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textColor="#000000"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/table_row" />
+
+    <EditText
+        android:id="@+id/_note_content_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:autofillHints=""
+        android:background="@drawable/custom_note_row"
+        android:ems="10"
+        android:fontFamily="@font/madeleina_sans"
+        android:gravity="start|top"
+        android:hint="@string/note_item_content_hint"
+        android:inputType="textMultiLine"
+        android:padding="10dp"
+        android:scrollbars="vertical"
+        android:textColor="#000000"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/_note_title_edit_text" />
 </androidx.constraintlayout.widget.ConstraintLayout>

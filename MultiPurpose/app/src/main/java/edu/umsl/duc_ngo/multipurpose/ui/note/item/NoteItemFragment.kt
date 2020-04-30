@@ -2,12 +2,12 @@ package edu.umsl.duc_ngo.multipurpose.ui.note.item
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -82,7 +82,8 @@ class NoteItemFragment : BaseFragment() {
 
         /* Create a new item */
         _note_create_button.setOnClickListener {
-            CreateNoteItemDialogFragment.newInstance().show(parentFragmentManager, "CreatePageDialog")
+            parentFragmentManager.beginTransaction().replace(R.id._base_activity, CreateNoteItemFragment.newInstance())
+                .addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit()
         }
 
         /* Monitor the item header label */
@@ -118,8 +119,8 @@ class NoteItemFragment : BaseFragment() {
             /* Predefine Listener */
             val editListener = View.OnClickListener {
                 viewModel.setCurrentItem(noteItem[position])
-                Log.d("TAG", "merp")
-                //EditItemDialogFragment.newInstance().show(parentFragmentManager, "EditPageDialog")
+                parentFragmentManager.beginTransaction().replace(R.id._base_activity, EditNoteItemFragment.newInstance())
+                    .addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit()
             }
 
             /* Edit Button */

@@ -41,5 +41,8 @@
         <item>Yellow</item>
     </string-array>
     <string name="note_item_header">All Page</string>
-    <string name="note_item_dialog_new_header">New Page</string>
+    <string name="note_item_new_header">New Page</string>
+    <string name="note_item_edit_header">Edit Page</string>
+    <string name="note_item_title_hint">Enter a title</string>
+    <string name="note_item_content_hint">Enter a note here…</string>
 </resources>
