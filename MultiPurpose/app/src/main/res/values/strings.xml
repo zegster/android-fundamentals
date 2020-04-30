@@ -45,4 +45,13 @@
     <string name="note_item_edit_header">Edit Page</string>
     <string name="note_item_title_hint">Enter a title</string>
     <string name="note_item_content_hint">Enter a note here…</string>
+
+    <!-- Weather Application -->
+    <string name="weather_address">St. Louis, MO</string>
+    <string name="weather_updated_at">Apr 30, 2020, 2:01:25 AM</string>
+    <string name="weather_min_temp">Min Temp: 05:05 AM</string>
+    <string name="weather_max_temp">Max Temp: 12:43 PM</string>
+    <string name="weather_status">Clear Sky</string>
+    <string name="weather_temp">60&#176;F</string>
+    <string name="weather_error_message">Something Went Wrong…</string>
 </resources>
