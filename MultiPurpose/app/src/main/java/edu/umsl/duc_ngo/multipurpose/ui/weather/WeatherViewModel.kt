@@ -9,7 +9,7 @@ class WeatherViewModel : ViewModel() {
     private var mJsonResult = MutableLiveData<String>()
 
     init {
-        mIsFetch.value = false
+        mIsFetch.value = true
         mJsonResult.value = ""
     }
 

@@ -1,6 +1,8 @@
 package edu.umsl.duc_ngo.multipurpose.ui.weather
 
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Intent
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -8,15 +10,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.location.LocationServices
 import com.google.gson.GsonBuilder
 import edu.umsl.duc_ngo.multipurpose.R
 import edu.umsl.duc_ngo.multipurpose.ui.BaseFragment
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.weather_fragment.*
 import okhttp3.*
 import java.io.IOException
@@ -41,9 +47,6 @@ class WeatherFragment : BaseFragment() {
     }
 
     /* Global Attributes */
-    private var units = "imperial"
-    private val apiKey = "8118ed6ee68db2debfaaa5a44c832918"
-    private var areaCode = "63114,us"
     private var requestMessage = ""
     private lateinit var viewModel: WeatherViewModel
 
@@ -62,9 +65,19 @@ class WeatherFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        _weather_return_button.setOnClickListener {
+            activity?.onBackPressed()
+        }
+
+        _weather_refresh_button.setOnClickListener {
+            viewModel.setIsFetch(true)
+            Toasty.info(context!!, "Updated", Toast.LENGTH_SHORT, true).show()
+        }
+
+
         /* Monitor the current list data */
         viewModel.getIsFetch().observe(viewLifecycleOwner, Observer {
-            if (it == true) {
+            if (it == false) {
                 /* Gson Doc: https://github.com/google/gson */
                 val gson = GsonBuilder().create()
                 val openWeatherApiData = gson.fromJson(viewModel.getJsonResult(), OpenWeatherApiData::class.java)
@@ -92,6 +105,7 @@ class WeatherFragment : BaseFragment() {
                 val feelsLike = "Feels Like: ${kotlin.math.ceil(openWeatherApiData.main.feels_like).toInt()}°F"
                 val colorLabel = when {
                     openWeatherApiData.main.temp < 30 -> "#00BCD4"
+                    openWeatherApiData.main.temp < 50 -> "#00D4C2"
                     openWeatherApiData.main.temp < 70 -> "#1BCA98"
                     else -> "#FF695E"
                 }
@@ -121,22 +135,48 @@ class WeatherFragment : BaseFragment() {
     }
 
     private fun fetchWeatherData() {
-        /* OkHttp Doc: https://square.github.io/okhttp/ */
-        val url = "https://api.openweathermap.org/data/2.5/weather?zip=$areaCode&units=$units&appid=$apiKey"
-        val request = Request.Builder().url(url).build()
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                requestMessage = "An error occurred! Failed to fetch data..."
-            }
+        /* Get user location */
+        var lon: Double
+        var lat: Double
+        if (ActivityCompat.checkSelfPermission(activity!!, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
+            val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity!!)
+            fusedLocationProviderClient.lastLocation.addOnCompleteListener {
+                val location = it.result
+                if(location != null) {
+                    lon = location.longitude
+                    lat = location.latitude
 
-            override fun onResponse(call: Call, response: Response) {
-                activity?.runOnUiThread {
-                    viewModel.setJsonResult(response.body?.string()!!)
-                    viewModel.setIsFetch(true)
+                    /* OkHttp Doc: https://square.github.io/okhttp/ */
+                    val units = "imperial"
+                    val apiKey = "8118ed6ee68db2debfaaa5a44c832918"
+                    val url = "https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=$units&appid=$apiKey"
+                    val request = Request.Builder().url(url).build()
+                    val client = OkHttpClient()
+                    client.newCall(request).enqueue(object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+                            requestMessage = "An error occurred! Failed to fetch data..."
+                            activity?.runOnUiThread {
+                                _error_message_text.visibility = View.VISIBLE
+                                _error_message_text.text = requestMessage
+                            }
+                        }
+
+                        override fun onResponse(call: Call, response: Response) {
+                            activity?.runOnUiThread {
+                                viewModel.setJsonResult(response.body?.string()!!)
+                                viewModel.setIsFetch(false)
+                            }
+                        }
+                    })
+                } else {
+                    requestMessage = "An error occurred! Can not get current location ..."
+                    _error_message_text.visibility = View.VISIBLE
+                    _error_message_text.text = requestMessage
                 }
             }
-        })
+        } else {
+            ActivityCompat.requestPermissions(activity!!, arrayOf(ACCESS_FINE_LOCATION), 1000)
+        }
     }
 
     /* OpenWeatherApi object data (for Gson) */
