@@ -47,11 +47,14 @@
     <string name="note_item_content_hint">Enter a note here…</string>
 
     <!-- Weather Application -->
-    <string name="weather_address">St. Louis, MO</string>
-    <string name="weather_updated_at">Apr 30, 2020, 2:01:25 AM</string>
-    <string name="weather_min_temp">Min Temp: 05:05 AM</string>
-    <string name="weather_max_temp">Max Temp: 12:43 PM</string>
-    <string name="weather_status">Clear Sky</string>
+    <string name="weather_placeholder">Weather</string>
     <string name="weather_temp">60&#176;F</string>
-    <string name="weather_error_message">Something Went Wrong…</string>
+    <string name="weather_error_message">Something Went Wrong…</string>=
+    <string name="weather_sunrise">Sunrise</string>
+    <string name="weather_sunset">Sunset</string>
+    <string name="weather_wind">Wind</string>
+    <string name="weather_pressure">Pressure</string>
+    <string name="weather_humidity">Humidity</string>
+    <string name="weather_powered_by">Powered By</string>
+    <string name="weather_open_weather">OpenWeather</string>
 </resources>

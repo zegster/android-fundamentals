@@ -8,6 +8,7 @@ import android.widget.Toast
 import edu.umsl.duc_ngo.multipurpose.R
 import edu.umsl.duc_ngo.multipurpose.ui.BaseFragment
 import edu.umsl.duc_ngo.multipurpose.ui.note.list.NoteListFragment
+import edu.umsl.duc_ngo.multipurpose.ui.weather.WeatherFragment
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.main_fragment.*
 
@@ -16,11 +17,7 @@ class MainFragment : BaseFragment() {
         fun newInstance() = MainFragment()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.main_fragment, container, false)
     }
 
@@ -35,7 +32,8 @@ class MainFragment : BaseFragment() {
 
         /* Starting the weather application */
         _weather_app_button.setOnClickListener {
-
+            val intent = WeatherFragment.newIntentInit(activity)
+            startActivity(intent)
         }
 
         /* Starting the chronometer application */

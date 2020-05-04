@@ -43,11 +43,11 @@ class NoteListFragment : BaseFragment() {
     }
 
     /* Global Attributes */
-    private lateinit var listViewModel: NoteListViewModel
+    private lateinit var viewModel: NoteListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        listViewModel = activity?.let {
+        viewModel = activity?.let {
             ViewModelProvider(it).get(NoteListViewModel::class.java)
         }!!
     }
@@ -78,9 +78,9 @@ class NoteListFragment : BaseFragment() {
                 /* Get Lists Data */
                 launch {
                     context?.let {
-                        listViewModel.setCurrentCategory(_note_categories_spinner.selectedItem.toString())
-                        val category = listViewModel.getCurrentCategory()
-                        listViewModel.setLists(
+                        viewModel.setCurrentCategory(_note_categories_spinner.selectedItem.toString())
+                        val category = viewModel.getCurrentCategory()
+                        viewModel.setLists(
                             NoteDatabase(it).getNoteDao()
                                 .getLists(SimpleSQLiteQuery("SELECT * FROM NoteList ORDER BY $category"))
                         )
@@ -97,13 +97,13 @@ class NoteListFragment : BaseFragment() {
         }
 
         /* Monitor the current list data */
-        listViewModel.getLists().observe(viewLifecycleOwner, Observer {
+        viewModel.getLists().observe(viewLifecycleOwner, Observer {
             _note_recycler_view.adapter = ListAdapter(it)
         })
 
         /* Monitor the current list data */
-        listViewModel.getItems().observe(viewLifecycleOwner, Observer {
-            _note_recycler_view.adapter = ListAdapter(listViewModel.getLists().value!!)
+        viewModel.getItems().observe(viewLifecycleOwner, Observer {
+            _note_recycler_view.adapter = ListAdapter(viewModel.getLists().value!!)
         })
     }
 
@@ -116,8 +116,8 @@ class NoteListFragment : BaseFragment() {
         /* Get Lists Data */
         launch {
             context?.let {
-                val category = listViewModel.getCurrentCategory()
-                listViewModel.setLists(
+                val category = viewModel.getCurrentCategory()
+                viewModel.setLists(
                     NoteDatabase(it).getNoteDao().getLists(SimpleSQLiteQuery("SELECT * FROM NoteList ORDER BY $category"))
                 )
             }
@@ -126,7 +126,7 @@ class NoteListFragment : BaseFragment() {
         /* Get Items Data */
         launch {
             context?.let {
-                listViewModel.setItems(NoteDatabase(it).getNoteDao().getItems())
+                viewModel.setItems(NoteDatabase(it).getNoteDao().getItems())
             }
         }
     }
@@ -147,11 +147,11 @@ class NoteListFragment : BaseFragment() {
             /* Label */
             holder.view._note_title_text.text = noteList[position].title
             holder.view._note_timestamp_text.text = noteList[position].timestamp
-            holder.view._note_total_item_label.text = listViewModel.getTotalItem(noteList[position].id).toString()
+            holder.view._note_total_item_label.text = viewModel.getTotalItem(noteList[position].id).toString()
 
             /* Edit Button */
             holder.view._note_edit_button.setOnClickListener {
-                listViewModel.setCurrentList(noteList[position])
+                viewModel.setCurrentList(noteList[position])
                 EditNoteListDialogFragment.newInstance().show(parentFragmentManager, "EditNoteDialog")
             }
 
@@ -162,8 +162,8 @@ class NoteListFragment : BaseFragment() {
                         NoteDatabase(it).getNoteDao().removeList(noteList[position].id)
                         Toasty.info(it, "[${noteList[position].title}] Deleted", Toast.LENGTH_SHORT, true).show()
 
-                        val category = listViewModel.getCurrentCategory()
-                        listViewModel.setLists(
+                        val category = viewModel.getCurrentCategory()
+                        viewModel.setLists(
                             NoteDatabase(it).getNoteDao()
                                 .getLists(SimpleSQLiteQuery("SELECT * FROM NoteList ORDER BY $category"))
                         )
@@ -172,7 +172,7 @@ class NoteListFragment : BaseFragment() {
             }
 
             /* Body: Setting up color tint and listener */
-            val colorLabel = listViewModel.getColorLabel(noteList[position].colorLabel)
+            val colorLabel = viewModel.getColorLabel(noteList[position].colorLabel)
             val drawable: Drawable = ContextCompat.getDrawable(context!!, R.drawable.custom_note_row)!!
             DrawableCompat.setTint(drawable, parseColor(colorLabel))
             holder.view._note_table_row.background = drawable

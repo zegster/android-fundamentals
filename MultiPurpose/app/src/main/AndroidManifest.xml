@@ -3,7 +3,7 @@
     package="edu.umsl.duc_ngo.multipurpose">
 
     <!-- Permission -->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -29,6 +29,11 @@
             android:launchMode="singleTop" />
         <activity
             android:name=".ui.note.item.NoteItemActivity"
+            android:launchMode="singleTop" />
+
+        <!-- Weather Application -->
+        <activity
+            android:name=".ui.weather.WeatherActivity"
             android:launchMode="singleTop" />
     </application>
 </manifest>
