@@ -34,13 +34,13 @@ class NoteListViewModel : ViewModel() {
             }
         } else {
             return when (colors) {
-                "Orange" -> "#FFFFB495"
-                "Red" -> "#FFFFB4B4"
-                "Violet" -> "#FFB48BFF"
-                "Blue" -> "#FFB4DEFF"
-                "Green" -> "#FFB1FFB4"
-                "Yellow" -> "#FFFFF7B4"
-                else -> "#FFFFFFFF"
+                "Orange" -> "#FFC8B2"
+                "Red" -> "#FFC8C8"
+                "Violet" -> "#D3C8FF"
+                "Blue" -> "#C8E7FF"
+                "Green" -> "#C6FFC8"
+                "Yellow" -> "#FFFAC8"
+                else -> "#FFFFFF"
             }
         }
     }

@@ -22,7 +22,7 @@
             android:id="@+id/_note_return_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#00BCD4"
+            android:backgroundTint="#64EDFF"
             android:src="@drawable/return_icon"
             tools:ignore="ContentDescription" />
 
@@ -58,7 +58,7 @@
             android:id="@+id/_note_create_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#00BCD4"
+            android:backgroundTint="#64EDFF"
             android:src="@drawable/plus_icon"
             tools:ignore="ContentDescription" />
     </TableRow>

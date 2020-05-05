@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/custom_background"
-    android:backgroundTint="#00BCD4"
+    android:backgroundTint="#FFFFFF"
     android:backgroundTintMode="multiply"
     android:ellipsize="marquee"
     android:fontFamily="@font/madeleina_sans"

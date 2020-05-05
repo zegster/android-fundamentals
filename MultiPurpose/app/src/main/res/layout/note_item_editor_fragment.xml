@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/custom_background">
 
     <TableRow
         android:id="@+id/table_row"
@@ -71,6 +72,8 @@
         android:layout_margin="5dp"
         android:autofillHints=""
         android:background="@drawable/custom_note_row"
+        android:backgroundTint="#3CF1EBF1"
+        android:backgroundTintMode="src_in"
         android:ems="10"
         android:fontFamily="@font/madeleina_sans"
         android:gravity="start|top"

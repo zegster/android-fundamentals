@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentActivity
@@ -32,6 +32,11 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.*
 
+/* NOTE: if below key doesn't work, try with this one: eabe929b48466442a960b351a240d26a */
+private const val APIKEY = "8118ed6ee68db2debfaaa5a44c832918"
+private const val LOCATION_REQUEST_CODE = 2020
+
+/* TODO: (later) implement daily forecast | able to select a city | able to select unit type */
 class WeatherFragment : BaseFragment() {
     companion object {
         fun newInstance() = WeatherFragment()
@@ -47,7 +52,7 @@ class WeatherFragment : BaseFragment() {
     }
 
     /* Global Attributes */
-    private var requestMessage = ""
+
     private lateinit var viewModel: WeatherViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +69,7 @@ class WeatherFragment : BaseFragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        hideInterface()
 
         _weather_return_button.setOnClickListener {
             activity?.onBackPressed()
@@ -71,13 +77,13 @@ class WeatherFragment : BaseFragment() {
 
         _weather_refresh_button.setOnClickListener {
             viewModel.setIsFetch(true)
-            Toasty.info(context!!, "Updated", Toast.LENGTH_SHORT, true).show()
         }
-
 
         /* Monitor the current list data */
         viewModel.getIsFetch().observe(viewLifecycleOwner, Observer {
             if (it == false) {
+                showInterface()
+
                 /* Gson Doc: https://github.com/google/gson */
                 val gson = GsonBuilder().create()
                 val openWeatherApiData = gson.fromJson(viewModel.getJsonResult(), OpenWeatherApiData::class.java)
@@ -134,70 +140,82 @@ class WeatherFragment : BaseFragment() {
         })
     }
 
+    private fun hideInterface() {
+        _address_container.visibility = View.GONE
+        _overview_container.visibility = View.GONE
+        _detailsContainer.visibility = View.GONE
+    }
+
+    private fun showInterface() {
+        _address_container.visibility = View.VISIBLE
+        _overview_container.visibility = View.VISIBLE
+        _detailsContainer.visibility = View.VISIBLE
+    }
+
     private fun fetchWeatherData() {
-        /* Get user location */
-        var lon: Double
-        var lat: Double
-        if (ActivityCompat.checkSelfPermission(activity!!, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
-            val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity!!)
-            fusedLocationProviderClient.lastLocation.addOnCompleteListener {
-                val location = it.result
-                if(location != null) {
-                    lon = location.longitude
-                    lat = location.latitude
+        /* Ask user for permission */
+        if (ContextCompat.checkSelfPermission(context!!, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
+            invokeApiCall()
+        } else {
+            requestPermissions(arrayOf(ACCESS_FINE_LOCATION), LOCATION_REQUEST_CODE)
+        }
+    }
 
-                    /* OkHttp Doc: https://square.github.io/okhttp/ */
-                    val units = "imperial"
-                    val apiKey = "8118ed6ee68db2debfaaa5a44c832918"
-                    val url = "https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=$units&appid=$apiKey"
-                    val request = Request.Builder().url(url).build()
-                    val client = OkHttpClient()
-                    client.newCall(request).enqueue(object : Callback {
-                        override fun onFailure(call: Call, e: IOException) {
-                            requestMessage = "An error occurred! Failed to fetch data..."
-                            activity?.runOnUiThread {
-                                _error_message_text.visibility = View.VISIBLE
-                                _error_message_text.text = requestMessage
-                            }
+    private fun invokeApiCall() {
+        /* Get the latest current location */
+        val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity!!)
+        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
+            if (location != null) {
+                /* OkHttp Doc: https://square.github.io/okhttp/ */
+                val units = "imperial"
+                val url =
+                    "https://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&lon=${location.longitude}&units=$units&appid=$APIKEY"
+                val request = Request.Builder().url(url).build()
+                val client = OkHttpClient()
+                client.newCall(request).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        val requestMessage = "An error occurred! Failed to fetch data..."
+                        activity?.runOnUiThread {
+                            _error_message_text.visibility = View.VISIBLE
+                            _error_message_text.text = requestMessage
                         }
+                    }
 
-                        override fun onResponse(call: Call, response: Response) {
-                            activity?.runOnUiThread {
-                                viewModel.setJsonResult(response.body?.string()!!)
-                                viewModel.setIsFetch(false)
-                            }
+                    override fun onResponse(call: Call, response: Response) {
+                        activity?.runOnUiThread {
+                            viewModel.setJsonResult(response.body?.string()!!)
+                            viewModel.setIsFetch(false)
+                            Toasty.info(context!!, "Updated", Toast.LENGTH_SHORT, true).show()
                         }
-                    })
-                } else {
-                    requestMessage = "An error occurred! Can not get current location ..."
+                    }
+                })
+            } else {
+                val requestMessage = "An error occurred! Can not get current location ..."
+                _error_message_text.visibility = View.VISIBLE
+                _error_message_text.text = requestMessage
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            LOCATION_REQUEST_CODE -> {
+                if (grantResults.isEmpty() || grantResults[0] != PERMISSION_GRANTED) {
+                    val requestMessage = "Permission is required to use this application..."
                     _error_message_text.visibility = View.VISIBLE
                     _error_message_text.text = requestMessage
+                } else {
+                    viewModel.setIsFetch(true)
                 }
             }
-        } else {
-            ActivityCompat.requestPermissions(activity!!, arrayOf(ACCESS_FINE_LOCATION), 1000)
         }
     }
 
     /* OpenWeatherApi object data (for Gson) */
-    data class OpenWeatherApiData(
-        val weather: List<WeatherData>,
-        val main: MainData,
-        val wind: WindData,
-        val sys: SysData,
-        val name: String
-    )
-
+    data class OpenWeatherApiData(val weather: List<WeatherData>, val main: MainData, val wind: WindData, val sys: SysData, val name: String)
     data class WeatherData(val main: String)
-    data class MainData(
-        val temp: Double,
-        val feels_like: Double,
-        val temp_min: Double,
-        val temp_max: Double,
-        val pressure: Double,
-        val humidity: Double
-    )
-
+    data class MainData(val temp: Double, val feels_like: Double, val temp_min: Double, val temp_max: Double, val pressure: Double, val humidity: Double)
     data class WindData(val speed: Double)
     data class SysData(val country: String, val sunrise: Long, val sunset: Long)
 }
