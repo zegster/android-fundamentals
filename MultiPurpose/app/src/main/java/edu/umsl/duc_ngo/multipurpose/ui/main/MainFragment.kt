@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import edu.umsl.duc_ngo.multipurpose.R
 import edu.umsl.duc_ngo.multipurpose.ui.BaseFragment
+import edu.umsl.duc_ngo.multipurpose.ui.chronometer.ChronometerFragment
 import edu.umsl.duc_ngo.multipurpose.ui.note.list.NoteListFragment
 import edu.umsl.duc_ngo.multipurpose.ui.weather.WeatherFragment
 import es.dmoral.toasty.Toasty
@@ -38,7 +39,8 @@ class MainFragment : BaseFragment() {
 
         /* Starting the chronometer application */
         _chronometer_app_button.setOnClickListener {
-
+            val intent = ChronometerFragment.newIntentInit(activity)
+            startActivity(intent)
         }
 
         /* Starting the counter application */

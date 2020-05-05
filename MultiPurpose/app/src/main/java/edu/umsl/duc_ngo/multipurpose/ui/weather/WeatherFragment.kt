@@ -52,7 +52,6 @@ class WeatherFragment : BaseFragment() {
     }
 
     /* Global Attributes */
-
     private lateinit var viewModel: WeatherViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
