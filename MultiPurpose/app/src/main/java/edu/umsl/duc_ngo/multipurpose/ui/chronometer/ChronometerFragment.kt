@@ -1,7 +1,6 @@
 package edu.umsl.duc_ngo.multipurpose.ui.chronometer
 
-import android.app.AlarmManager
-import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -9,11 +8,10 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Chronometer
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import edu.umsl.duc_ngo.multipurpose.R
-import edu.umsl.duc_ngo.multipurpose.service.chronometer.ChronometerReceiver
+import edu.umsl.duc_ngo.multipurpose.service.chronometer.ChronometerService
 import edu.umsl.duc_ngo.multipurpose.ui.BaseFragment
 import kotlinx.android.synthetic.main.chronometer_fragment.*
 
@@ -33,10 +31,11 @@ class ChronometerFragment : BaseFragment() {
 
     /* Global Attributes */
     private lateinit var viewModel: ChronometerViewModel
+    private lateinit var broadcastReceiver: ChronometerReceiver
     private lateinit var timer: CountDownTimer
     private var timerState = ChronometerViewModel.TimerState.Stopped
-    private var timerLengthSeconds = 0L
-    private var secondsRemaining = 0L
+    private var timerLengthSeconds = 0L  //The maximum time of the timer
+    private var secondsRemaining = 0L    //The remaining second left on the timer
 
     /* Called only once and only call again when activity was destroyed or launched again */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +51,10 @@ class ChronometerFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        _chronometer_return_button.setOnClickListener {
+            activity?.onBackPressed()
+        }
 
         _start_button.setOnClickListener {
             startTimer()
@@ -69,15 +72,13 @@ class ChronometerFragment : BaseFragment() {
             timer.cancel()
             onTimerFinished()
         }
-
-//        val serviceIntent = Intent(context, ChronometerService::class.java)
-//        activity?.startService(serviceIntent)
-//        activity?.stopService(serviceIntent)
     }
 
     /* Called after onCreate() and will keep calling whenever activity come up on the screen */
     override fun onResume() {
         super.onResume()
+        val serviceIntent = Intent(activity, ChronometerService::class.java)
+        activity?.stopService(serviceIntent)
         initTimer()
     }
 
@@ -86,6 +87,9 @@ class ChronometerFragment : BaseFragment() {
         super.onPause()
         if (timerState == ChronometerViewModel.TimerState.Running) {
             timer.cancel()
+            val serviceIntent = Intent(activity, ChronometerService::class.java)
+            serviceIntent.putExtra(ChronometerService.SECOND_REMAINING, secondsRemaining)
+            activity?.startService(serviceIntent)
         } else if (timerState == ChronometerViewModel.TimerState.Paused) {
             //TODO:
         }
@@ -95,6 +99,7 @@ class ChronometerFragment : BaseFragment() {
         viewModel.setSecondsRemaining(secondsRemaining)
     }
 
+    /* Chronometer Function */
     private fun initTimer() {
         timerState = viewModel.getTimerState()
 
@@ -153,9 +158,6 @@ class ChronometerFragment : BaseFragment() {
     private fun updateCountdownUI() {
         val minutesLeft = secondsRemaining / 60
         val secondsInMinuteLeft = secondsRemaining - minutesLeft * 60
-        println(secondsRemaining)
-        println(minutesLeft)
-        println(secondsInMinuteLeft)
         val timeText =
             "$minutesLeft:${if (secondsInMinuteLeft.toString().length == 2) {
                 secondsInMinuteLeft.toString()
@@ -182,6 +184,16 @@ class ChronometerFragment : BaseFragment() {
                 _start_button.visibility = View.VISIBLE
                 _pause_button.visibility = View.GONE
                 _stop_button.visibility = View.GONE
+            }
+        }
+    }
+
+    /* Broadcast Receiver */
+    class ChronometerReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent?.let {
+                val sec = it.getLongExtra(ChronometerService.SECOND_REMAINING, 0L)
+                println(sec)
             }
         }
     }

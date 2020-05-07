@@ -3,9 +3,9 @@
     package="edu.umsl.duc_ngo.multipurpose">
 
     <!-- Permission -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service android:name=".service.chronometer.ChronometerService" />
+        <service
+            android:name=".service.chronometer.ChronometerService"
+            android:exported="false" />
 
         <!-- Main Menu -->
         <activity
