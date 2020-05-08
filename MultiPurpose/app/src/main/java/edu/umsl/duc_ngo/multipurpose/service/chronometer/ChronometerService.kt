@@ -4,10 +4,14 @@ import android.app.Service
 import android.content.Intent
 import android.os.CountDownTimer
 import android.os.IBinder
+import android.util.Log
+
+private const val TAG = "ChronometerService"
 
 class ChronometerService : Service() {
     companion object {
-        const val SECOND_REMAINING = "edu.umsl.duc_ngo.second_remaining"
+        const val CHRONOMETER_SERVICE = "edu.umsl.duc_ngo.chronometer_service"
+        const val RETURN_SECONDS_LEFT = "edu.umsl.duc_ngo.return_seconds_left"
     }
 
     /* Global Attributes */
@@ -19,9 +23,10 @@ class ChronometerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val initSecondsRemaining = intent?.getLongExtra(SECOND_REMAINING, 0L)
+        val initSecondsRemaining = intent?.getLongExtra(CHRONOMETER_SERVICE, 0L)
 
         initSecondsRemaining?.let {
+            secondsRemaining = it
             timer = object : CountDownTimer(it * 1000, 1000) {
                 override fun onFinish() {
                     stopSelf(startId)
@@ -29,20 +34,19 @@ class ChronometerService : Service() {
 
                 override fun onTick(millisUntilFinished: Long) {
                     secondsRemaining = millisUntilFinished / 1000
-                    println(secondsRemaining)
-
+                    Log.d(TAG, "$secondsRemaining")
                 }
             }.start()
         }
-
         return START_STICKY
     }
 
     override fun onDestroy() {
-        println("Chronometer Service Ended")
+        Log.d(TAG, "Chronometer Service Ended")
         timer?.cancel()
-        val intent = Intent(SECOND_REMAINING)
-        intent.putExtra(SECOND_REMAINING, secondsRemaining)
+
+        val intent = Intent(CHRONOMETER_SERVICE)
+        intent.putExtra(RETURN_SECONDS_LEFT, secondsRemaining)
         sendBroadcast(intent)
         super.onDestroy()
     }
