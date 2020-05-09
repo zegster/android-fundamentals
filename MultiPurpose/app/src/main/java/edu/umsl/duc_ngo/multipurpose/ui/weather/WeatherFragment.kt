@@ -114,7 +114,7 @@ class WeatherFragment : BaseFragment() {
                     openWeatherApiData.main.temp < 70 -> "#1BCA98"
                     else -> "#FF695E"
                 }
-                val drawable: Drawable = ContextCompat.getDrawable(context!!, R.drawable.custom_background)!!
+                val drawable: Drawable = ContextCompat.getDrawable(context!!, R.drawable.custom_background_type_a)!!
                 DrawableCompat.setTint(drawable, Color.parseColor(colorLabel))
                 _status_text.text = openWeatherApiData.weather[0].main
                 _temp_text.text = temperature

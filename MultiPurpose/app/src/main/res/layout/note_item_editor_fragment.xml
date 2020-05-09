@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/custom_background">
+    android:background="@drawable/custom_background_type_a">
 
     <TableRow
         android:id="@+id/table_row"

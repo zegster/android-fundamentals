@@ -3,7 +3,7 @@
     android:id="@+id/_note_caegories_label_spinner"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/custom_background"
+    android:background="@drawable/custom_background_type_a"
     android:backgroundTint="#FFFFFF"
     android:backgroundTintMode="multiply"
     android:ellipsize="marquee"

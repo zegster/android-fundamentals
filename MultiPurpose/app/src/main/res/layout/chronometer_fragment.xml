@@ -2,9 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/_chronometer_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/custom_background"
+    android:background="@drawable/custom_live_background"
+    android:backgroundTint="#96F3FF"
+    android:backgroundTintMode="multiply"
     android:padding="25dp">
 
     <LinearLayout
@@ -38,6 +41,33 @@
             tools:ignore="ContentDescription" />
     </LinearLayout>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="280dp"
+        android:minHeight="280dp"
+        android:tint="#73323232"
+        android:tintMode="multiply"
+        app:layout_constraintBottom_toTopOf="@+id/chronometer_controller_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/action_container"
+        app:srcCompat="@drawable/circle_shape"
+        tools:ignore="ContentDescription" />
+
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        style="@style/Widget.MaterialProgressBar.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="350dp"
+        android:minHeight="350dp"
+        android:progress="100"
+        app:layout_constraintBottom_toTopOf="@+id/chronometer_controller_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/action_container"
+        app:mpb_progressTint="#000000" />
+
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
         android:id="@+id/_chronometer_progress_bar"
         style="@style/Widget.MaterialProgressBar.ProgressBar"
@@ -55,6 +85,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/radio_space"
+        android:textColor="#000000"
         android:textSize="50sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

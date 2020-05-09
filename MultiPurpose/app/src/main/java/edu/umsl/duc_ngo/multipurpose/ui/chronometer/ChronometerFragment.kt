@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -59,6 +60,10 @@ class ChronometerFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val animationDrawable: AnimationDrawable = _chronometer_background.background as AnimationDrawable
+        animationDrawable.setEnterFadeDuration(4000)
+        animationDrawable.setExitFadeDuration(4000)
+        animationDrawable.start()
 
         _chronometer_return_button.setOnClickListener {
             activity?.onBackPressed()
@@ -105,8 +110,6 @@ class ChronometerFragment : BaseFragment() {
             serviceIntent.putExtra(CHRONOMETER_SERVICE, timerRemaining)
             activity?.startService(serviceIntent)
             Log.d(TAG, "Starting Service")
-        } else if (timerState == ChronometerViewModel.TimerState.Paused) {
-            //TODO:
         }
 
         viewModel.setTimerState(timerState)
@@ -178,7 +181,7 @@ class ChronometerFragment : BaseFragment() {
         val hoursText = hoursLeft.toString().padStart(2, '0')
         val minutesText = minutesLeft.toString().padStart(2, '0')
         val secondsText = secondsLeft.toString().padStart(2, '0')
-        val timeText =  "$hoursText:$minutesText:$secondsText"
+        val timeText = "$hoursText:$minutesText:$secondsText"
 
         _chornometer_time_text.text = timeText
         _chronometer_progress_bar.progress = (timerLength - timerRemaining).toInt()

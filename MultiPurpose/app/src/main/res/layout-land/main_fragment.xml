@@ -5,7 +5,7 @@
     android:id="@+id/_main_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/custom_background"
+    android:background="@drawable/custom_background_type_a"
     android:backgroundTint="#323232"
     android:backgroundTintMode="multiply">
 

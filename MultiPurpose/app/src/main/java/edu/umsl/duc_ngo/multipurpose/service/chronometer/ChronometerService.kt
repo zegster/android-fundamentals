@@ -4,11 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.graphics.Color
 import android.os.Build
 import android.os.CountDownTimer
 import android.os.IBinder
@@ -17,7 +13,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import edu.umsl.duc_ngo.multipurpose.R
 import edu.umsl.duc_ngo.multipurpose.ui.chronometer.ChronometerActivity
-import java.util.concurrent.TimeUnit
 import kotlin.math.floor
 
 private const val TAG = "ChronometerService"
@@ -25,7 +20,6 @@ private const val TAG = "ChronometerService"
 class ChronometerService : Service() {
     companion object {
         const val CHRONOMETER_SERVICE = "edu.umsl.duc_ngo.chronometer_service"
-        const val SELF_ACTION = "edu.umsl.duc_ngo.self_action"
         const val TIMER_REMAINING = "edu.umsl.duc_ngo.timer_remaining"
     }
 
@@ -87,7 +81,7 @@ class ChronometerService : Service() {
     override fun onDestroy() {
         Log.d(TAG, "Chronometer Service Ended")
         timer?.cancel()
-        if (isEmptyTask) {
+        if (!isEmptyTask) {
             val broadcast = Intent(CHRONOMETER_SERVICE)
             broadcast.putExtra(TIMER_REMAINING, timerRemaining)
             sendBroadcast(broadcast)

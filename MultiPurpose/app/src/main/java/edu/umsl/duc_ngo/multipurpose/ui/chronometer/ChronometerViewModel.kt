@@ -35,7 +35,7 @@ class ChronometerViewModel : ViewModel() {
     }
 
     fun getTimerLength(): Int {
-        return 160
+        return 1
     }
 
     fun getTimerRemaining(): Long {
