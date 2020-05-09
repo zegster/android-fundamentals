@@ -14,8 +14,11 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import edu.umsl.duc_ngo.multipurpose.R
 import edu.umsl.duc_ngo.multipurpose.service.chronometer.ChronometerService
+import edu.umsl.duc_ngo.multipurpose.service.chronometer.ChronometerService.Companion.CHRONOMETER_SERVICE
+import edu.umsl.duc_ngo.multipurpose.service.chronometer.ChronometerService.Companion.TIMER_REMAINING
 import edu.umsl.duc_ngo.multipurpose.ui.BaseFragment
 import kotlinx.android.synthetic.main.chronometer_fragment.*
+import kotlin.math.floor
 
 private const val TAG = "ChronometerFragment"
 
@@ -36,10 +39,10 @@ class ChronometerFragment : BaseFragment() {
     /* Global Attributes */
     private lateinit var viewModel: ChronometerViewModel
     private var broadcastReceiver: BroadcastReceiver = ChronometerReceiver()
-    private lateinit var timer: CountDownTimer
+    private var timer: CountDownTimer? = null
     private var timerState = ChronometerViewModel.TimerState.Stopped
-    private var timerLengthSeconds = 0L  //The maximum time of the timer
-    private var secondsRemaining = 0L    //The remaining second left on the timer
+    private var timerLength = 0L    //The maximum time of the timer
+    private var timerRemaining = 0L  //The remaining second left on the timer
 
     /* Called only once and only call again when activity was destroyed or launched again */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,13 +71,13 @@ class ChronometerFragment : BaseFragment() {
         }
 
         _pause_button.setOnClickListener {
-            timer.cancel()
+            timer?.cancel()
             timerState = ChronometerViewModel.TimerState.Paused
             updateButton()
         }
 
         _stop_button.setOnClickListener {
-            timer.cancel()
+            timer?.cancel()
             onTimerFinished()
         }
     }
@@ -84,7 +87,7 @@ class ChronometerFragment : BaseFragment() {
     /* If register a receiver in onCreate(), you unregister it in onDestroy() */
     override fun onResume() {
         Log.d(TAG, "onResume()")
-        activity?.registerReceiver(broadcastReceiver, IntentFilter(ChronometerService.CHRONOMETER_SERVICE))
+        activity?.registerReceiver(broadcastReceiver, IntentFilter(CHRONOMETER_SERVICE))
         activity?.stopService(Intent(activity, ChronometerService::class.java))
         initTimer()
         super.onResume()
@@ -97,9 +100,9 @@ class ChronometerFragment : BaseFragment() {
         super.onPause()
         Log.d(TAG, "onPause()")
         if (timerState == ChronometerViewModel.TimerState.Running) {
-            timer.cancel()
+            timer?.cancel()
             val serviceIntent = Intent(activity, ChronometerService::class.java)
-            serviceIntent.putExtra(ChronometerService.CHRONOMETER_SERVICE, secondsRemaining)
+            serviceIntent.putExtra(CHRONOMETER_SERVICE, timerRemaining)
             activity?.startService(serviceIntent)
             Log.d(TAG, "Starting Service")
         } else if (timerState == ChronometerViewModel.TimerState.Paused) {
@@ -107,8 +110,8 @@ class ChronometerFragment : BaseFragment() {
         }
 
         viewModel.setTimerState(timerState)
-        viewModel.setPreviousTimerLengthSeconds(timerLengthSeconds)
-        viewModel.setSecondsRemaining(secondsRemaining)
+        viewModel.setPreviousTimerLength(timerLength)
+        viewModel.setTimerRemaining(timerRemaining)
         activity?.unregisterReceiver(broadcastReceiver)
     }
 
@@ -122,10 +125,10 @@ class ChronometerFragment : BaseFragment() {
             setPreviousTimerLength()
         }
 
-        secondsRemaining = if (timerState == ChronometerViewModel.TimerState.Running || timerState == ChronometerViewModel.TimerState.Paused) {
-            viewModel.getSecondsRemaining()
+        timerRemaining = if (timerState == ChronometerViewModel.TimerState.Running || timerState == ChronometerViewModel.TimerState.Paused) {
+            viewModel.getTimerRemaining()
         } else {
-            timerLengthSeconds
+            timerLength
         }
 
         if (timerState == ChronometerViewModel.TimerState.Running) {
@@ -140,8 +143,8 @@ class ChronometerFragment : BaseFragment() {
         timerState = ChronometerViewModel.TimerState.Stopped
         setNewTimerLength()
         _chronometer_progress_bar.progress = 0
-        viewModel.setSecondsRemaining(timerLengthSeconds)
-        secondsRemaining = timerLengthSeconds
+        viewModel.setTimerRemaining(timerLength)
+        timerRemaining = timerLength
 
         updateButton()
         updateCountdownUI()
@@ -149,36 +152,36 @@ class ChronometerFragment : BaseFragment() {
 
     private fun startTimer() {
         timerState = ChronometerViewModel.TimerState.Running
-        timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
+        timer = object : CountDownTimer(timerRemaining * 1000, 1000) {
             override fun onFinish() = onTimerFinished()
             override fun onTick(millisUntilFinished: Long) {
-                secondsRemaining = millisUntilFinished / 1000
+                timerRemaining = millisUntilFinished / 1000
                 updateCountdownUI()
             }
         }.start()
     }
 
     private fun setNewTimerLength() {
-        timerLengthSeconds = (viewModel.getTimerLength() * 60L)
-        _chronometer_progress_bar.max = timerLengthSeconds.toInt()
+        timerLength = (viewModel.getTimerLength() * 60L)
+        _chronometer_progress_bar.max = timerLength.toInt()
     }
 
     private fun setPreviousTimerLength() {
-        timerLengthSeconds = viewModel.getPreviousTimerLengthSeconds()
-        _chronometer_progress_bar.max = timerLengthSeconds.toInt()
+        timerLength = viewModel.getPreviousTimerLength()
+        _chronometer_progress_bar.max = timerLength.toInt()
     }
 
     private fun updateCountdownUI() {
-        val minutesLeft = secondsRemaining / 60
-        val secondsInMinuteLeft = secondsRemaining - minutesLeft * 60
-        val timeText =
-            "$minutesLeft:${if (secondsInMinuteLeft.toString().length == 2) {
-                secondsInMinuteLeft.toString()
-            } else {
-                "0$secondsInMinuteLeft"
-            }}"
+        val hoursLeft = floor((timerRemaining / 3600).toDouble()).toLong()
+        val minutesLeft = floor(((timerRemaining - (hoursLeft * 3600)) / 60).toDouble()).toLong()
+        val secondsLeft = timerRemaining - (hoursLeft * 3600) - (minutesLeft * 60)
+        val hoursText = hoursLeft.toString().padStart(2, '0')
+        val minutesText = minutesLeft.toString().padStart(2, '0')
+        val secondsText = secondsLeft.toString().padStart(2, '0')
+        val timeText =  "$hoursText:$minutesText:$secondsText"
+
         _chornometer_time_text.text = timeText
-        _chronometer_progress_bar.progress = (timerLengthSeconds - secondsRemaining).toInt()
+        _chronometer_progress_bar.progress = (timerLength - timerRemaining).toInt()
     }
 
     private fun updateButton() {
@@ -205,8 +208,9 @@ class ChronometerFragment : BaseFragment() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Log.d(TAG, "onReceive()")
             intent?.let {
-                timer.cancel()
-                viewModel.setSecondsRemaining(it.getLongExtra(ChronometerService.RETURN_SECONDS_LEFT, 0L))
+                timer?.cancel()
+                viewModel.setTimerRemaining(it.getLongExtra(TIMER_REMAINING, 0L))
+                viewModel.setTimerState(ChronometerViewModel.TimerState.Running)
                 initTimer()
             }
         }

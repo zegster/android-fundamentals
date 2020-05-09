@@ -9,13 +9,13 @@ class ChronometerViewModel : ViewModel() {
     }
 
     private var mTimerState = MutableLiveData<TimerState>()
-    private var mTimerLengthSeconds = MutableLiveData<Long>()
-    private var mSecondsRemaining = MutableLiveData<Long>()
+    private var mTimerLength = MutableLiveData<Long>()
+    private var mTimerRemaining = MutableLiveData<Long>()
 
     init {
         mTimerState.value = TimerState.Stopped
-        mTimerLengthSeconds.value = 0L
-        mSecondsRemaining.value = 0L
+        mTimerLength.value = 0L
+        mTimerRemaining.value = 0L
     }
 
     fun getTimerState(): TimerState {
@@ -26,23 +26,23 @@ class ChronometerViewModel : ViewModel() {
         mTimerState.value = state
     }
 
-    fun getPreviousTimerLengthSeconds(): Long {
-        return mTimerLengthSeconds.value!!
+    fun getPreviousTimerLength(): Long {
+        return mTimerLength.value!!
     }
 
-    fun setPreviousTimerLengthSeconds(seconds: Long) {
-        mTimerLengthSeconds.value = seconds
+    fun setPreviousTimerLength(seconds: Long) {
+        mTimerLength.value = seconds
     }
 
     fun getTimerLength(): Int {
-        return 1
+        return 160
     }
 
-    fun getSecondsRemaining(): Long {
-        return mSecondsRemaining.value!!
+    fun getTimerRemaining(): Long {
+        return mTimerRemaining.value!!
     }
 
-    fun setSecondsRemaining(seconds: Long) {
-        mSecondsRemaining.value = seconds
+    fun setTimerRemaining(seconds: Long) {
+        mTimerRemaining.value = seconds
     }
 }
