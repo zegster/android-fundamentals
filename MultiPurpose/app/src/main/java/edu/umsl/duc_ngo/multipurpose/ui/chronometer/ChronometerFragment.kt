@@ -52,6 +52,7 @@ class ChronometerFragment : BaseFragment() {
         viewModel = activity?.let {
             ViewModelProvider(it).get(ChronometerViewModel::class.java)
         }!!
+        timerState = viewModel.getTimerState()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -91,9 +92,11 @@ class ChronometerFragment : BaseFragment() {
         }
 
         viewModel.getTimerLength().observe(viewLifecycleOwner, Observer {
-            timerLength = it
-            onTimerFinished()
-            initTimer()
+            if(timerState == ChronometerViewModel.TimerState.Stopped) {
+                timerLength = it
+                onTimerFinished()
+                initTimer()
+            }
         })
     }
 
@@ -128,7 +131,6 @@ class ChronometerFragment : BaseFragment() {
     /* Chronometer Function */
     private fun initTimer() {
         timerState = viewModel.getTimerState()
-
         if (timerState == ChronometerViewModel.TimerState.Stopped) {
             setNewTimerLength()
         } else {

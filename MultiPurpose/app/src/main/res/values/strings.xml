@@ -61,5 +61,4 @@
     <!-- Chronometer Application -->
     <string name="chronometer_setting_header">Setting</string>
     <string name="chronometer_setting_hint">00:00:00</string>
-
 </resources>
