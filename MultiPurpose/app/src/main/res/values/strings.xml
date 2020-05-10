@@ -57,4 +57,9 @@
     <string name="weather_humidity">Humidity</string>
     <string name="weather_powered_by">Powered By</string>
     <string name="weather_open_weather">OpenWeather</string>
+
+    <!-- Chronometer Application -->
+    <string name="chronometer_setting_header">Setting</string>
+    <string name="chronometer_setting_hint">00:00:00</string>
+
 </resources>

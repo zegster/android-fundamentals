@@ -23,7 +23,8 @@
             android:id="@+id/_chronometer_return_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#3CF1EBF1"
+            android:backgroundTint="#00BCD4"
+            android:backgroundTintMode="multiply"
             android:src="@drawable/return_icon"
             tools:ignore="ContentDescription" />
 
@@ -36,7 +37,8 @@
             android:id="@+id/_chronometer_setting_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#3CF1EBF1"
+            android:backgroundTint="#00BCD4"
+            android:backgroundTintMode="multiply"
             android:src="@drawable/setting_icon"
             tools:ignore="ContentDescription" />
     </LinearLayout>

@@ -29,11 +29,11 @@ class CreateNoteListDialogFragment : BaseDialogFragment() {
         fun newInstance() = CreateNoteListDialogFragment()
     }
 
-    private lateinit var listViewModel: NoteListViewModel
+    private lateinit var viewModel: NoteListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        listViewModel = activity?.let {
+        viewModel = activity?.let {
             ViewModelProvider(it).get(NoteListViewModel::class.java)
         }!!
     }
@@ -90,9 +90,9 @@ class CreateNoteListDialogFragment : BaseDialogFragment() {
                         NoteDatabase(lContext).getNoteDao().addList(newList)
                         Toasty.info(lContext, "New Note Created", Toast.LENGTH_SHORT, true).show()
 
-                        /* Update listViewModel */
-                        val category = listViewModel.getCurrentCategory()
-                        listViewModel.setLists(
+                        /* Update viewModel */
+                        val category = viewModel.getCurrentCategory()
+                        viewModel.setLists(
                             NoteDatabase(lContext).getNoteDao()
                                 .getLists(SimpleSQLiteQuery("SELECT * FROM NoteList ORDER BY $category"))
                         )

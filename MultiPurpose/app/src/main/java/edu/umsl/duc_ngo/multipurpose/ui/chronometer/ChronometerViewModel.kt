@@ -1,5 +1,6 @@
 package edu.umsl.duc_ngo.multipurpose.ui.chronometer
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
@@ -9,11 +10,13 @@ class ChronometerViewModel : ViewModel() {
     }
 
     private var mTimerState = MutableLiveData<TimerState>()
+    private var mTimerInitLength = MutableLiveData<Long>()
     private var mTimerLength = MutableLiveData<Long>()
     private var mTimerRemaining = MutableLiveData<Long>()
 
     init {
         mTimerState.value = TimerState.Stopped
+        mTimerInitLength.value = 0L
         mTimerLength.value = 0L
         mTimerRemaining.value = 0L
     }
@@ -34,8 +37,12 @@ class ChronometerViewModel : ViewModel() {
         mTimerLength.value = seconds
     }
 
-    fun getTimerLength(): Int {
-        return 1
+    fun setTimerLength(seconds: Long) {
+        mTimerInitLength.value = seconds
+    }
+
+    fun getTimerLength(): LiveData<Long> {
+        return mTimerInitLength
     }
 
     fun getTimerRemaining(): Long {

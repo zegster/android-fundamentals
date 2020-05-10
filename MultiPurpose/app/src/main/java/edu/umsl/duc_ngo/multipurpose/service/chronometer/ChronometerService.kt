@@ -8,7 +8,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.CountDownTimer
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import edu.umsl.duc_ngo.multipurpose.R
@@ -70,7 +69,6 @@ class ChronometerService : Service() {
                     timerRemaining = millisUntilFinished / 1000
                     notification.setContentText(timeDisplay())
                     notificationManager.notify(1, notification.build())
-                    Log.d(TAG, "$timerRemaining")
                 }
             }.start()
         }
@@ -79,7 +77,6 @@ class ChronometerService : Service() {
     }
 
     override fun onDestroy() {
-        Log.d(TAG, "Chronometer Service Ended")
         timer?.cancel()
         if (!isEmptyTask) {
             val broadcast = Intent(CHRONOMETER_SERVICE)

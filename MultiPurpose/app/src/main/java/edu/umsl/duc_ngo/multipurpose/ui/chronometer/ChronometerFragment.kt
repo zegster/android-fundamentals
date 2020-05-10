@@ -4,14 +4,15 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import edu.umsl.duc_ngo.multipurpose.R
 import edu.umsl.duc_ngo.multipurpose.service.chronometer.ChronometerService
@@ -42,13 +43,12 @@ class ChronometerFragment : BaseFragment() {
     private var broadcastReceiver: BroadcastReceiver = ChronometerReceiver()
     private var timer: CountDownTimer? = null
     private var timerState = ChronometerViewModel.TimerState.Stopped
-    private var timerLength = 0L    //The maximum time of the timer
-    private var timerRemaining = 0L  //The remaining second left on the timer
+    private var timerLength = 0L
+    private var timerRemaining = 0L
 
     /* Called only once and only call again when activity was destroyed or launched again */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate()")
         viewModel = activity?.let {
             ViewModelProvider(it).get(ChronometerViewModel::class.java)
         }!!
@@ -69,6 +69,10 @@ class ChronometerFragment : BaseFragment() {
             activity?.onBackPressed()
         }
 
+        _chronometer_setting_button.setOnClickListener {
+            SettingChronometerDialogFragment.newInstance().show(parentFragmentManager, "SettingChronometerDialog")
+        }
+
         _start_button.setOnClickListener {
             startTimer()
             timerState = ChronometerViewModel.TimerState.Running
@@ -85,13 +89,18 @@ class ChronometerFragment : BaseFragment() {
             timer?.cancel()
             onTimerFinished()
         }
+
+        viewModel.getTimerLength().observe(viewLifecycleOwner, Observer {
+            timerLength = it
+            onTimerFinished()
+            initTimer()
+        })
     }
 
     /* Called after onCreate() and will keep calling whenever activity come up on the screen */
     /* If register a receiver in onResume(), you unregister it in onPause() */
     /* If register a receiver in onCreate(), you unregister it in onDestroy() */
     override fun onResume() {
-        Log.d(TAG, "onResume()")
         activity?.registerReceiver(broadcastReceiver, IntentFilter(CHRONOMETER_SERVICE))
         activity?.stopService(Intent(activity, ChronometerService::class.java))
         initTimer()
@@ -103,13 +112,11 @@ class ChronometerFragment : BaseFragment() {
     /* If register a receiver in onCreate(), you unregister it in onDestroy() */
     override fun onPause() {
         super.onPause()
-        Log.d(TAG, "onPause()")
         if (timerState == ChronometerViewModel.TimerState.Running) {
             timer?.cancel()
             val serviceIntent = Intent(activity, ChronometerService::class.java)
             serviceIntent.putExtra(CHRONOMETER_SERVICE, timerRemaining)
             activity?.startService(serviceIntent)
-            Log.d(TAG, "Starting Service")
         }
 
         viewModel.setTimerState(timerState)
@@ -143,11 +150,16 @@ class ChronometerFragment : BaseFragment() {
     }
 
     private fun onTimerFinished() {
+        timer?.cancel()
         timerState = ChronometerViewModel.TimerState.Stopped
-        setNewTimerLength()
+
         _chronometer_progress_bar.progress = 0
-        viewModel.setTimerRemaining(timerLength)
+        setNewTimerLength()
         timerRemaining = timerLength
+
+        viewModel.setTimerState(ChronometerViewModel.TimerState.Stopped)
+        viewModel.setPreviousTimerLength(timerLength)
+        viewModel.setTimerRemaining(timerLength)
 
         updateButton()
         updateCountdownUI()
@@ -165,7 +177,6 @@ class ChronometerFragment : BaseFragment() {
     }
 
     private fun setNewTimerLength() {
-        timerLength = (viewModel.getTimerLength() * 60L)
         _chronometer_progress_bar.max = timerLength.toInt()
     }
 
@@ -185,6 +196,19 @@ class ChronometerFragment : BaseFragment() {
 
         _chornometer_time_text.text = timeText
         _chronometer_progress_bar.progress = (timerLength - timerRemaining).toInt()
+
+        val progressPercent = timerRemaining.toDouble() / timerLength.toDouble()
+        when {
+            progressPercent <= 0.25 -> {
+                _chronometer_progress_bar.currentDrawable?.setTint(Color.parseColor("#FF6464"))
+            }
+            progressPercent <= 0.5 -> {
+                _chronometer_progress_bar.currentDrawable?.setTint(Color.parseColor("#FFEF64"))
+            }
+            else -> {
+                _chronometer_progress_bar.currentDrawable?.setTint(Color.parseColor("#B7FF64"))
+            }
+        }
     }
 
     private fun updateButton() {
@@ -193,27 +217,33 @@ class ChronometerFragment : BaseFragment() {
                 _start_button.visibility = View.GONE
                 _pause_button.visibility = View.VISIBLE
                 _stop_button.visibility = View.VISIBLE
+                _chronometer_setting_button.isEnabled = false
+                _chronometer_setting_button.background.setTint(Color.parseColor("#3CF1EBF1"))
             }
             ChronometerViewModel.TimerState.Paused -> {
                 _start_button.visibility = View.VISIBLE
                 _pause_button.visibility = View.GONE
                 _stop_button.visibility = View.VISIBLE
+                _chronometer_setting_button.isEnabled = false
+                _chronometer_setting_button.background.setTint(Color.parseColor("#3CF1EBF1"))
             }
             ChronometerViewModel.TimerState.Stopped -> {
                 _start_button.visibility = View.VISIBLE
                 _pause_button.visibility = View.GONE
                 _stop_button.visibility = View.GONE
+                _chronometer_setting_button.isEnabled = true
+                _chronometer_setting_button.background.setTint(Color.parseColor("#00BCD4"))
             }
         }
     }
 
     inner class ChronometerReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            Log.d(TAG, "onReceive()")
             intent?.let {
-                timer?.cancel()
-                viewModel.setTimerRemaining(it.getLongExtra(TIMER_REMAINING, 0L))
+                onTimerFinished()
                 viewModel.setTimerState(ChronometerViewModel.TimerState.Running)
+                viewModel.setPreviousTimerLength(timerLength)
+                viewModel.setTimerRemaining(it.getLongExtra(TIMER_REMAINING, 0L))
                 initTimer()
             }
         }

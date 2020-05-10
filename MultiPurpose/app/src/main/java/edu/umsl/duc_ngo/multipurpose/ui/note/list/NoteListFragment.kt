@@ -173,9 +173,7 @@ class NoteListFragment : BaseFragment() {
 
             /* Body: Setting up color tint and listener */
             val colorLabel = viewModel.getColorLabel(noteList[position].colorLabel)
-            val drawable: Drawable = ContextCompat.getDrawable(context!!, R.drawable.custom_note_row)!!
-            DrawableCompat.setTint(drawable, parseColor(colorLabel))
-            holder.view._note_table_row.background = drawable
+            holder.view._note_table_row.background.setTint(parseColor(colorLabel))
             holder.view._note_table_row.setOnClickListener {
                 val intent = NoteItemFragment.newIntentInit(activity, noteList[position].id)
                 startActivity(intent)
