@@ -92,7 +92,7 @@ class ChronometerFragment : BaseFragment() {
         }
 
         viewModel.getTimerLength().observe(viewLifecycleOwner, Observer {
-            if(timerState == ChronometerViewModel.TimerState.Stopped) {
+            if (timerState == ChronometerViewModel.TimerState.Stopped) {
                 timerLength = it
                 onTimerFinished()
                 initTimer()

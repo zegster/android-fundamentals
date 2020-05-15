@@ -10,7 +10,6 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import edu.umsl.duc_ngo.multipurpose.R
 import edu.umsl.duc_ngo.multipurpose.data.note.NoteDatabase
-import edu.umsl.duc_ngo.multipurpose.data.note.NoteItem
 import edu.umsl.duc_ngo.multipurpose.ui.BaseFragment
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.note_item_editor_fragment.*

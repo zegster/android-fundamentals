@@ -1,10 +1,9 @@
 package edu.umsl.duc_ngo.multipurpose.service.chronometer
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.CountDownTimer
 import android.os.IBinder
@@ -37,6 +36,14 @@ class ChronometerService : Service() {
         initSecondsRemaining?.let {
             timerRemaining = it
 
+            /* Creating Notification Channel */
+            val notificationId = 101
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val serviceChannel = NotificationChannel(CHRONOMETER_SERVICE, "Chronometer Application", NotificationManager.IMPORTANCE_HIGH)
+                notificationManager.createNotificationChannel(serviceChannel)
+            }
+
             /* Creating Notification */
             val activityIntent = Intent(this, ChronometerActivity::class.java)
             val contentIntent = PendingIntent.getActivity(this, 0, activityIntent, 0)
@@ -47,19 +54,6 @@ class ChronometerService : Service() {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOnlyAlertOnce(true)
                 .setContentIntent(contentIntent)
-            startForeground(1, notification.build())
-
-
-            /* Creating Notification Channel */
-            val notificationManager = NotificationManagerCompat.from(this)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val serviceChannel = NotificationChannel(
-                    CHRONOMETER_SERVICE,
-                    "Chronometer Application",
-                    NotificationManager.IMPORTANCE_HIGH
-                )
-                notificationManager.createNotificationChannel(serviceChannel)
-            }
 
 
             /* Creating background chronometer */
@@ -68,9 +62,11 @@ class ChronometerService : Service() {
                 override fun onTick(millisUntilFinished: Long) {
                     timerRemaining = millisUntilFinished / 1000
                     notification.setContentText(timeDisplay())
-                    notificationManager.notify(1, notification.build())
+                    notificationManager.notify(notificationId, notification.build())
                 }
             }.start()
+
+            startForeground(notificationId, notification.build())
         }
 
         return START_STICKY

@@ -26,7 +26,6 @@ import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.weather_fragment.*
 import okhttp3.*
 import java.io.IOException
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -258,7 +257,16 @@ class WeatherFragment : BaseFragment() {
     }
 
     /* OpenWeatherApi object data (for Gson) */
-    data class OpenWeatherApiData(val cod: Int, val message: String, val weather: List<WeatherData>, val main: MainData, val wind: WindData, val sys: SysData, val name: String)
+    data class OpenWeatherApiData(
+        val cod: Int,
+        val message: String,
+        val weather: List<WeatherData>,
+        val main: MainData,
+        val wind: WindData,
+        val sys: SysData,
+        val name: String
+    )
+
     data class WeatherData(val main: String)
     data class MainData(
         val temp: Double,

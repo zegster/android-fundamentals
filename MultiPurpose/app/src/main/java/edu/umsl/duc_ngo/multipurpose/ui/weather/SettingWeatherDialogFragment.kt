@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import edu.umsl.duc_ngo.multipurpose.R
 import edu.umsl.duc_ngo.multipurpose.ui.BaseDialogFragment
 import kotlinx.android.synthetic.main.weather_dialog_fragment.view.*
-import java.util.*
 
 class SettingWeatherDialogFragment : BaseDialogFragment() {
     companion object {
