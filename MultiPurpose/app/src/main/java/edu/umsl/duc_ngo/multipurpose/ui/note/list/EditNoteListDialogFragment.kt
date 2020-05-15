@@ -28,11 +28,11 @@ class EditNoteListDialogFragment : BaseDialogFragment() {
         fun newInstance() = EditNoteListDialogFragment()
     }
 
-    private lateinit var listViewModel: NoteListViewModel
+    private lateinit var viewModel: NoteListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        listViewModel = activity?.let {
+        viewModel = activity?.let {
             ViewModelProvider(it).get(NoteListViewModel::class.java)
         }!!
     }
@@ -54,7 +54,7 @@ class EditNoteListDialogFragment : BaseDialogFragment() {
             val mBuilder = AlertDialog.Builder(it).setView(mDialogView)
 
             /* Current List Attributes */
-            val currentList = listViewModel.getCurrentList()
+            val currentList = viewModel.getCurrentList()
 
             /* Dialog Header */
             mDialogView._note_dialog_header.text = getString(R.string.note_list_dialog_edit_header)
@@ -67,7 +67,7 @@ class EditNoteListDialogFragment : BaseDialogFragment() {
             val spinnerAdapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_dropdown_item, colorLabels)
             mDialogView._note_colors_label_spinner.adapter = spinnerAdapter
             mDialogView._note_colors_label_spinner.setSelection(
-                listViewModel.getColorLabel(currentList.colorLabel, true).toInt()
+                viewModel.getColorLabel(currentList.colorLabel, true).toInt()
             )
 
             /* Dialog Cancellation */
@@ -103,8 +103,8 @@ class EditNoteListDialogFragment : BaseDialogFragment() {
                         Toasty.info(lContext, "Note Updated", Toast.LENGTH_SHORT, true).show()
 
                         /* Update listViewModel */
-                        val category = listViewModel.getCurrentCategory()
-                        listViewModel.setLists(
+                        val category = viewModel.getCurrentCategory()
+                        viewModel.setLists(
                             NoteDatabase(lContext).getNoteDao()
                                 .getLists(SimpleSQLiteQuery("SELECT * FROM NoteList ORDER BY $category"))
                         )

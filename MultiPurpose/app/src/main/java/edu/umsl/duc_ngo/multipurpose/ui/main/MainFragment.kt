@@ -45,17 +45,17 @@ class MainFragment : BaseFragment() {
 
         /* Starting the counter application */
         _counter_app_button.setOnClickListener {
-
+            Toasty.info(context!!, "Not Available. Work In Progress", Toast.LENGTH_SHORT, true).show()
         }
 
         /* Starting the alarm application */
         _alarm_app_button.setOnClickListener {
-            Toasty.info(context!!, "Work In Progress", Toast.LENGTH_SHORT, true).show()
+            Toasty.info(context!!, "Not Available. Work In Progress", Toast.LENGTH_SHORT, true).show()
         }
 
         /* Starting the reminder application */
         _reminder_app_button.setOnClickListener {
-            Toasty.info(context!!, "Work In Progress", Toast.LENGTH_SHORT, true).show()
+            Toasty.info(context!!, "Not Available. Work In Progress", Toast.LENGTH_SHORT, true).show()
         }
     }
 }

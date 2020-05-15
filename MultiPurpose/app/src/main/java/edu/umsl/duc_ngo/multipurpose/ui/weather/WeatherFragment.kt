@@ -26,6 +26,7 @@ import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.weather_fragment.*
 import okhttp3.*
 import java.io.IOException
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -74,66 +75,78 @@ class WeatherFragment : BaseFragment() {
             activity?.onBackPressed()
         }
 
+        _weather_setting_button.setOnClickListener {
+            SettingWeatherDialogFragment.newInstance().show(parentFragmentManager, "SettingWeatherDialog")
+        }
+
         _weather_refresh_button.setOnClickListener {
             viewModel.setIsFetch(true)
         }
 
-        /* Monitor the current list data */
         viewModel.getIsFetch().observe(viewLifecycleOwner, Observer {
             if (it == false) {
-                showInterface()
-
                 /* Gson Doc: https://github.com/google/gson */
                 val gson = GsonBuilder().create()
                 val openWeatherApiData = gson.fromJson(viewModel.getJsonResult(), OpenWeatherApiData::class.java)
-                _loader.visibility = View.GONE
+
+                showInterface()
+                _error_container.visibility = View.GONE
 
                 /* OpenWeatherApi Doc: https://openweathermap.org/current */
-                /* Location */
-                val address = "${openWeatherApiData.name}, ${openWeatherApiData.sys.country}"
-                _address_text.text = address
+                try {
+                    /* Location */
+                    val address = "${openWeatherApiData.name}, ${openWeatherApiData.sys.country}"
+                    _address_text.text = address
 
-                /* Last Updated: Get current local date time */
-                val currentTime = LocalDateTime.now()
-                val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
-                val formatted = currentTime.format(formatter)
-                _updated_at_text.text = formatted
+                    /* Last Updated: Get current local date time */
+                    val currentTime = LocalDateTime.now()
+                    val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
+                    val formatted = currentTime.format(formatter)
+                    _updated_at_text.text = formatted
 
-                /* Max and Min temperature */
-                val minTemp = "Min Temp: ${kotlin.math.ceil(openWeatherApiData.main.temp_min).toInt()}°F"
-                val maxTemp = "Max Temp: ${kotlin.math.ceil(openWeatherApiData.main.temp_max).toInt()}°F"
-                _temp_min_text.text = minTemp
-                _temp_max_text.text = maxTemp
+                    /* Max and Min temperature */
+                    val minTemp = "Min Temp: ${kotlin.math.ceil(openWeatherApiData.main.temp_min).toInt()}°F"
+                    val maxTemp = "Max Temp: ${kotlin.math.ceil(openWeatherApiData.main.temp_max).toInt()}°F"
+                    _temp_min_text.text = minTemp
+                    _temp_max_text.text = maxTemp
 
-                /* Temperature (the color of background will alter, depend on the temperature */
-                val temperature = "${kotlin.math.ceil(openWeatherApiData.main.temp).toInt()}°F"
-                val feelsLike = "Feels Like: ${kotlin.math.ceil(openWeatherApiData.main.feels_like).toInt()}°F"
-                val colorLabel = when {
-                    openWeatherApiData.main.temp < 30 -> "#00BCD4"
-                    openWeatherApiData.main.temp < 50 -> "#00D4C2"
-                    openWeatherApiData.main.temp < 70 -> "#1BCA98"
-                    else -> "#FF695E"
+                    /* Temperature (the color of background will alter, depend on the temperature */
+                    val temperature = "${kotlin.math.ceil(openWeatherApiData.main.temp).toInt()}°F"
+                    val feelsLike = "Feels Like: ${kotlin.math.ceil(openWeatherApiData.main.feels_like).toInt()}°F"
+                    val colorLabel = when {
+                        openWeatherApiData.main.temp < 30 -> "#00BCD4"
+                        openWeatherApiData.main.temp < 50 -> "#00D4C2"
+                        openWeatherApiData.main.temp < 80 -> "#1BCA98"
+                        else -> "#FF695E"
+                    }
+                    val drawable: Drawable = ContextCompat.getDrawable(context!!, R.drawable.custom_background_type_a)!!
+                    DrawableCompat.setTint(drawable, Color.parseColor(colorLabel))
+                    _status_text.text = openWeatherApiData.weather[0].main
+                    _temp_text.text = temperature
+                    _feels_like_text.text = feelsLike
+                    _weather_background.background = drawable
+
+                    /* Details */
+                    val sunrise = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(openWeatherApiData.sys.sunrise * 1000))
+                    val sunset = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(openWeatherApiData.sys.sunset * 1000))
+                    val wind = "${openWeatherApiData.wind.speed} mph"
+                    val pressure = "${openWeatherApiData.main.pressure} hPa"
+                    val humidity = "${openWeatherApiData.main.humidity} %"
+                    _sunrise_text.text = sunrise
+                    _sunset_text.text = sunset
+                    _wind_text.text = wind
+                    _pressure_text.text = pressure
+                    _humidity_text.text = humidity
+                } catch (e: Exception) {
+                    val requestMessage = "${openWeatherApiData.cod}\n${openWeatherApiData.message}"
+                    hideInterface()
+                    _error_container.visibility = View.VISIBLE
+                    _error_message_text.visibility = View.VISIBLE
+                    _error_message_text.text = requestMessage
                 }
-                val drawable: Drawable = ContextCompat.getDrawable(context!!, R.drawable.custom_background_type_a)!!
-                DrawableCompat.setTint(drawable, Color.parseColor(colorLabel))
-                _status_text.text = openWeatherApiData.weather[0].main
-                _temp_text.text = temperature
-                _feels_like_text.text = feelsLike
-                _weather_background.background = drawable
-
-                /* Details */
-                val sunrise = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(openWeatherApiData.sys.sunrise * 1000))
-                val sunset = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(openWeatherApiData.sys.sunset * 1000))
-                val wind = "${openWeatherApiData.wind.speed} mph"
-                val pressure = "${openWeatherApiData.main.pressure} hPa"
-                val humidity = "${openWeatherApiData.main.humidity} %"
-                _sunrise_text.text = sunrise
-                _sunset_text.text = sunset
-                _wind_text.text = wind
-                _pressure_text.text = pressure
-                _humidity_text.text = humidity
             } else {
-                _loader.visibility = View.VISIBLE
+                _error_container.visibility = View.VISIBLE
+                _error_message_text.visibility = View.GONE
                 fetchWeatherData()
             }
         })
@@ -152,15 +165,21 @@ class WeatherFragment : BaseFragment() {
     }
 
     private fun fetchWeatherData() {
-        /* Ask user for permission */
-        if (ContextCompat.checkSelfPermission(context!!, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
-            invokeApiCall()
+        val isUseLocation = WeatherPrefUtil.getUseLocation(context!!)
+
+        if (isUseLocation) {
+            /* Ask user for permission */
+            if (ContextCompat.checkSelfPermission(context!!, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
+                invokeLocationApiCall()
+            } else {
+                requestPermissions(arrayOf(ACCESS_FINE_LOCATION), LOCATION_REQUEST_CODE)
+            }
         } else {
-            requestPermissions(arrayOf(ACCESS_FINE_LOCATION), LOCATION_REQUEST_CODE)
+            invokeInputApiCall()
         }
     }
 
-    private fun invokeApiCall() {
+    private fun invokeLocationApiCall() {
         /* Get the latest current location */
         val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity!!)
         fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
@@ -173,7 +192,7 @@ class WeatherFragment : BaseFragment() {
                 val client = OkHttpClient()
                 client.newCall(request).enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        val requestMessage = "An error occurred! Failed to fetch data..."
+                        val requestMessage = "An error occurred! \nFailed to fetch data..."
                         activity?.runOnUiThread {
                             _error_message_text.visibility = View.VISIBLE
                             _error_message_text.text = requestMessage
@@ -189,11 +208,38 @@ class WeatherFragment : BaseFragment() {
                     }
                 })
             } else {
-                val requestMessage = "An error occurred! Can not get current location ..."
+                val requestMessage = "An error occurred! \nCan not get current location ..."
                 _error_message_text.visibility = View.VISIBLE
                 _error_message_text.text = requestMessage
             }
         }
+    }
+
+    private fun invokeInputApiCall() {
+        /* OkHttp Doc: https://square.github.io/okhttp/ */
+        val zipcode = WeatherPrefUtil.getZipCode(context!!)
+        val countryCode = WeatherPrefUtil.getCountryCode(context!!)
+        val units = "imperial"
+        val url = "http://api.openweathermap.org/data/2.5/weather?zip=${zipcode},${countryCode}&units=$units&appid=$APIKEY"
+        val request = Request.Builder().url(url).build()
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                val requestMessage = "An error occurred! \nFailed to fetch data..."
+                activity?.runOnUiThread {
+                    _error_message_text.visibility = View.VISIBLE
+                    _error_message_text.text = requestMessage
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                activity?.runOnUiThread {
+                    viewModel.setJsonResult(response.body?.string()!!)
+                    viewModel.setIsFetch(false)
+                    Toasty.info(context!!, "Updated", Toast.LENGTH_SHORT, true).show()
+                }
+            }
+        })
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -212,9 +258,17 @@ class WeatherFragment : BaseFragment() {
     }
 
     /* OpenWeatherApi object data (for Gson) */
-    data class OpenWeatherApiData(val weather: List<WeatherData>, val main: MainData, val wind: WindData, val sys: SysData, val name: String)
+    data class OpenWeatherApiData(val cod: Int, val message: String, val weather: List<WeatherData>, val main: MainData, val wind: WindData, val sys: SysData, val name: String)
     data class WeatherData(val main: String)
-    data class MainData(val temp: Double, val feels_like: Double, val temp_min: Double, val temp_max: Double, val pressure: Double, val humidity: Double)
+    data class MainData(
+        val temp: Double,
+        val feels_like: Double,
+        val temp_min: Double,
+        val temp_max: Double,
+        val pressure: Double,
+        val humidity: Double
+    )
+
     data class WindData(val speed: Double)
     data class SysData(val country: String, val sunrise: Long, val sunset: Long)
 }

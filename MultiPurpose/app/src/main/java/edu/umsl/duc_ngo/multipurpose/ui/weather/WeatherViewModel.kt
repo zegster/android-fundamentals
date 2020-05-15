@@ -21,11 +21,11 @@ class WeatherViewModel : ViewModel() {
         mIsFetch.value = bool
     }
 
-    fun getJsonResult (): String {
+    fun getJsonResult(): String {
         return mJsonResult.value!!
     }
 
-    fun setJsonResult (body: String) {
+    fun setJsonResult(body: String) {
         mJsonResult.value = body
     }
 }
